@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import './index.css'
+// @ts-ignore
 import ElectricBorder from './components/ElectricBorder.jsx'
 import {GridScan} from './components/GridScan';
 import userData from "./user.json"
