@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "pixel_architect",
+      "displayName": "Alex Rivera",
+      "password": "hashed_password_7f8e9a",
+      "role": "admin",
+      "lastLogin": "2025-12-18T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "username": "cyber_scout",
+      "displayName": "Jordan Smith",
+      "password": "hashed_password_2b4c6d",
+      "role": "editor",
+      "lastLogin": "2025-12-17T15:45:00Z"
+    },
+    {
+      "id": 3,
+      "username": "starlight_coder",
+      "displayName": "Sam Taylor",
+      "password": "hashed_password_9a1b3c",
+      "role": "user",
+      "lastLogin": "2025-12-18T08:12:00Z"
+    }
+  ]
+}
