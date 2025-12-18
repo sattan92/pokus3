@@ -6,7 +6,6 @@ import {GridScan} from './components/GridScan';
 import userData from "./user.json"
 
 
-
 function App() {
   return (
     <>
