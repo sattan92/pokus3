@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import './index.css'
-import ElectricBorder from './components/ElectricBorder'
+import ElectricBorder from './components/ElectricBorder.tsx'
 import {GridScan} from './components/GridScan';
 import userData from "./user.json"
 
@@ -13,11 +13,12 @@ function App() {
         
             <div className="relative z-20 bg-white p-5 text-black lista">
               <div className='w-min grid justify-self-end order-3 text-purple-200 z-10'><ElectricBorder
+                className="electric-border"
                 color="#7df9ff"
                 speed={1}
                 chaos={0.6}
                 thickness={3}
-                style={{ borderRadius: 3}}>
+                style={{ borderRadius: 3 }}>
               <div className=''>
                 <Clock></Clock>
               </div>
@@ -61,7 +62,7 @@ export function Clock() {
   }, []);
 
   // 3. Helper function to add a leading zero (e.g., 05 instead of 5)
-  function format(num) {
+  function format(num:number) {
     return num.toString().padStart(2, '0');
   }
 
