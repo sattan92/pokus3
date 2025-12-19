@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
 import './SpotlightCard.css';
 
-// eslint-disable-next-line no-unused-vars
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
