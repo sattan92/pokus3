@@ -1,44 +1,45 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import './index.css'
-// @ts-ignore
-import ElectricBorder from './components/ElectricBorder.jsx'
-import {GridScan} from './components/GridScan';
 import userData from "./user.json"
+import LiquidChrome from './components/LiquidChrome';
+import SpotlightCard from './components/SpotlightCard';
 
 
 function App() {
   return (
     <>
-        
-            <div className="relative z-20 bg-white p-5 text-black lista">
-              <div className='w-min grid justify-self-end order-3 text-purple-200 z-10'><ElectricBorder
-                className="electric-border"
-                color="#7df9ff"
-                speed={1}
-                chaos={0.6}
-                thickness={3}
-                style={{ borderRadius: 3 }}>
-              <div className=''>
-                <Clock></Clock>
-              </div>
-              </ElectricBorder></div>
-              <h2 className="login z-10 text-white">Login</h2>
-              <h2 className='username z-10 text-white bg-purple-500/60 rounded-lg p-3 font-semibold'>Welcome <UserName></UserName></h2>
-              <div className='inset-0 absolute bg-black/50' style={{ width: '100%', height: '100%', position: 'absolute' }}>
-  <GridScan 
-    sensitivity={0.55}
-    lineThickness={1}
-    linesColor="#392e4e"
-    gridScale={0.1}
-    scanColor="#FF9FFC"
-    scanOpacity={0.4}
-    enablePost
-    bloomIntensity={0.6}
-    chromaticAberration={0.002}
-    noiseIntensity={0.01}
-  />
-</div>
+      <div className="all w-screen h-screen">
+        <div className='h-min text-xl lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center'>
+
+          <div id='hodiny' className='text-end content-center md:p-[3vw] p-5 order-3 justify-self-end h-full bg-white/20 backdrop-blur-md border border-white/20 shadow-xl rounded-xl w-min'>
+            <Clock></Clock>
+          </div>
+          <h2 className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-md border border-white/20 shadow-xl rounded-xl p-5">Login</h2>
+          <h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-md border border-white/20 shadow-xl rounded-xl p-5'>Welcome: <UserName></UserName></h2>
+          <div className='absolute -z-10 inset-0' style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
+            <LiquidChrome
+              baseColor={[0.1, 0, 0.1]}
+              speed={0.3}
+              amplitude={0.4}
+              interactive={false} />
+          </div>
+        </div>
+        <div className="md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] line bg-white/20 backdrop-blur-md border border-white/20 shadow-xl rounded-xl p-1.5"></div>
+        <div className="md:gap-[4vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 gap-[2vw]">
+          <SpotlightCard className=" " spotlightColor="rgba(208, 67, 255, 0.78)">
+            <h1 className='text-xl lg:text-[35px] md:text-[25px] pb-2'>Features</h1>
+            <div className='ml-[2vw]'>
+            <ol className='grid grid-rows-5 h-min gap-2'>
+              <li>Killaura</li>
+              <li>No-fall</li>
+              <li>Anti-Knockback</li>
+              <li>Flight</li>
+              <li>Free cam</li>
+            </ol></div>
+          </SpotlightCard><SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(0, 229, 255, 0.2)">
+  // Content goes here
+          </SpotlightCard></div>
       </div>
     </>
   )
@@ -49,33 +50,33 @@ export function Clock() {
   const [time, setTime] = useState(new Date());
 
   // 2. Set up the effect using a traditional function
-  useEffect(function() {
-    const timerId = setInterval(function() {
+  useEffect(function () {
+    const timerId = setInterval(function () {
       // Update the state with the current time
       setTime(new Date());
     }, 1000);
 
     // This is the "cleanup" function that stops the timer
-    return function() {
+    return function () {
       clearInterval(timerId);
     };
   }, []);
 
   // 3. Helper function to add a leading zero (e.g., 05 instead of 5)
-  function format(num:number) {
+  function format(num: number) {
     return num.toString().padStart(2, '0');
   }
 
   return (
     <div className="cas" >
-      <div className="cas1">
-        <h1>{format(time.getHours())}:</h1>
+      <div className="cas1 ">
+        <h1 >{format(time.getHours())}:</h1>
       </div>
       <div className="cas2">
-        <h1>{format(time.getMinutes())}:</h1>
+        <h1 >{format(time.getMinutes())}:</h1>
       </div>
       <div className="cas3">
-        <h1>{format(time.getSeconds())}</h1>
+        <h1 >{format(time.getSeconds())}</h1>
       </div>
     </div>
   );
