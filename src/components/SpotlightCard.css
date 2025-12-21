@@ -18,8 +18,7 @@
   border-radius: 0.75rem; /* 12px */
 
   /* p-8 */
-  padding: 2rem; /* 32px */
-  padding: 2rem;
+  padding: 2vw; /* 32px */
   overflow: hidden;
   --mouse-x: 50%;
   --mouse-y: 50%;
