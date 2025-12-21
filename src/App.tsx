@@ -10,13 +10,13 @@ function App() {
   return (
     <>
       <div className="all w-screen h-screen">
-        <div className='text-purple-600 font-bold  h-min text-xl lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center'>
+        <div className='text-purple-600 font-bold  h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center'>
 
-          <div id='hodiny' className='text-start content-center md:p-[3vw] p-5 order-3 justify-self-end h-full bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl w-min'>
+          <div id='hodiny' className='text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl w-min'>
             <Clock></Clock>
           </div>
-          <h2 className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-5">Login</h2>
-          <h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-5'>Welcome: <UserName></UserName></h2>
+          <h2 className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">Login</h2>
+          <h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4'>Welcome: <UserName></UserName></h2>
           <div className='absolute -z-10 inset-0' style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
             <LiquidChrome
               baseColor={[0.05, 0, 0.1]}
@@ -43,7 +43,7 @@ function App() {
           <SpotlightCard className="custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
             <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
           </SpotlightCard></div>
-          
+
       </div>
     </>
   )
