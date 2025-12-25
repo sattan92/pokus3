@@ -21,6 +21,7 @@
     "lucide-react": "^0.562.0",
     "mysql2": "^3.16.0",
     "ogl": "^1.0.11",
+    "pg": "^8.16.3",
     "postprocessing": "^6.38.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
