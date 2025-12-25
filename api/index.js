@@ -36,9 +36,4 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Note: For Vercel, app.listen is usually not needed if using /api folder,
-// but keeping it here for your local testing.
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+export default app;
