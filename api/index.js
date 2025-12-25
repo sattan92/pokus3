@@ -17,7 +17,7 @@ const db = new Pool({
 });
 
 // REGISTER
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
