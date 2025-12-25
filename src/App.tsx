@@ -55,7 +55,6 @@ function App() {
   )
 }
 
-let imgCount = 0;
 
 export function GetImage() {
   const ImagesList = ImageList.images;
