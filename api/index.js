@@ -17,13 +17,13 @@ const db = new Pool({
 });
 
 // REGISTER
-app.post("/api/register", async (req, res) => {
+// Change "/api/register" to "/api/users" to match your frontend call
+app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // CHANGE: Postgres uses $1, $2, $3 instead of ?
     await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)",
       [username, email, passwordHash]
@@ -31,8 +31,8 @@ app.post("/api/register", async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Database error" });
+    console.error("DB Error:", error);
+    res.status(500).json({ error: "Database error", details: error.message });
   }
 });
 
