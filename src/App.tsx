@@ -4,7 +4,7 @@ import './index.css'
 import userData from "./user.json"
 import LiquidChrome from './components/LiquidChrome';
 import SpotlightCard from './components/SpotlightCard';
-
+import ImageList from "./images.json"
 
 function App() {
   return (
@@ -44,9 +44,47 @@ function App() {
             <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
           </SpotlightCard></div>
 
+        <div className="p-[2vw]">
+          <SpotlightCard className="md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
+
+            <div className='h-full'><GetImage></GetImage></div>
+
+          </SpotlightCard></div>
       </div>
     </>
   )
+}
+
+let imgCount = 0;
+
+export function GetImage() {
+  const ImagesList = ImageList.images;
+  const [imgCount, setImgCount] = useState(0);
+
+  function nextImage() {
+    var newIndex = imgCount + 1;
+
+    if (newIndex >= ImagesList.length) {
+      newIndex = 0;
+    }
+
+    setImgCount(newIndex);
+  }
+
+  function prevImage() {
+    var newIndex = imgCount - 1;
+
+    if (newIndex < 0) {
+      newIndex = ImagesList.length - 1;
+    }
+
+    setImgCount(newIndex);
+  }
+  return (<div className=' gap-[2vw] grid grid-cols-[1fr_8fr_1fr] auto-rows-fr h-full'>
+    <img onClick={nextImage} className='cursor-pointer self-center' src="/arrow_left.png" alt="sdadsa" />
+    <img className="rounded-xl justify-self-center max-w-full max-h-full h-full" src={ImagesList[imgCount]} alt="image" />
+    <img onClick={prevImage} className="cursor-pointer self-center" src="/arrow_right.png" alt="dsadsa" />
+  </div>)
 }
 
 export function Clock() {
