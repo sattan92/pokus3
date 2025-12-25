@@ -3,6 +3,8 @@ import { Renderer, Program, Mesh, Triangle } from 'ogl';
 
 import './LiquidChrome.css';
 
+
+
 interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
   baseColor?: [number, number, number];
   speed?: number;
@@ -151,17 +153,24 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     container.appendChild(gl.canvas);
 
     return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
-      if (interactive) {
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('touchmove', handleTouchMove);
-      }
-      if (gl.canvas.parentElement) {
-        gl.canvas.parentElement.removeChild(gl.canvas);
-      }
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
-    };
+  cancelAnimationFrame(animationId);
+  window.removeEventListener('resize', resize);
+  
+  if (interactive) {
+    container.removeEventListener('mousemove', handleMouseMove);
+    container.removeEventListener('touchmove', handleTouchMove);
+  }
+
+  // EXPLICIT GPU CLEANUP
+  geometry.remove(); // This deletes the vertex buffers
+  program.remove();  // This deletes the shaders
+
+  if (gl.canvas.parentElement) {
+    gl.canvas.parentElement.removeChild(gl.canvas);
+  }
+  
+  gl.getExtension('WEBGL_lose_context')?.loseContext();
+};
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
   return <div ref={containerRef} className="liquidChrome-container" {...props} />;

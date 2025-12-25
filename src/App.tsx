@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import './App.css'
 import './index.css'
 import userData from "./user.json"
@@ -6,7 +6,20 @@ import LiquidChrome from './components/LiquidChrome';
 import SpotlightCard from './components/SpotlightCard';
 import ImageList from "./images.json"
 
+const CHROME_COLOR: [number, number, number] = [0.05, 0, 0.1];
+const MemoizedLiquidChrome = memo(LiquidChrome);
+
+
 function App() {
+  const [isOpen, setIsOpen] = useState(false);
+  function handleClick() {
+    setIsOpen(true)
+  };
+
+  function handleClose() {
+    setIsOpen(false);
+  }
+
   return (
     <>
       <div className="all w-screen h-screen">
@@ -15,11 +28,11 @@ function App() {
           <div id='hodiny' className='text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl w-min'>
             <Clock></Clock>
           </div>
-          <h2 className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">Login</h2>
+          <h2 onClick={handleClick} className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">Login</h2>
           <h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4'>Welcome: <UserName></UserName></h2>
           <div className='absolute -z-10 inset-0' style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
-            <LiquidChrome
-              baseColor={[0.05, 0, 0.1]}
+            <MemoizedLiquidChrome
+              baseColor={CHROME_COLOR}
               speed={0.2}
               amplitude={0.3}
               interactive={false} />
@@ -49,14 +62,65 @@ function App() {
 
             <div className='h-full'><GetImage></GetImage></div>
 
-          </SpotlightCard></div>
+          </SpotlightCard>
+        </div>
+        {isOpen && <Register onClose={handleClose} />}
       </div>
     </>
   )
 }
 
+function Register({ onClose }: { onClose: () => void }) {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  async function handleSubmit() {
+  if (!username || !email || !password) {
+    alert("Fill in all fields");
+    return;
+  }
 
-export function GetImage() {
+  const res = await fetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username,
+      email,
+      password,
+    }),
+  });
+
+  if (res.ok) {
+    alert("Registered successfully!");
+    onClose();
+  } else {
+    alert("Registration failed");
+  }
+};
+
+  return (
+    <div className='fixed justify-self-center mt-[-75%]'>
+      <SpotlightCard className="custom-spotlight-card w-[50vw] text-purple-600 font-bold text-2xl lg:text-[35px] md:text-[25px] grid grid-rows-8 gap-[1vw] justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
+        <div className='grid grid-cols-[9fr_1fr]'>
+          <h1 className='justify-self-center'>Register</h1>
+          <img className='max-h-[3vw] cursor-pointer' src="x.png" alt="" onClick={onClose} />
+        </div>
+        <h1>Username</h1>
+        <input className='border-[0.2vw] border-black rounded-lg' type="text" value={username}
+          onChange={(e) => setUsername(e.target.value)} />
+        <h1>Email</h1>
+        <input className='border-[0.2vw] border-black rounded-lg' type="email" value={email}
+          onChange={(e) => setEmail(e.target.value)} />
+        <h1>Password</h1>
+        <input className='border-[0.2vw] border-black rounded-lg' type="password" value={password}
+          onChange={(e) => setPassword(e.target.value)} />
+        <input className='hover:cursor-pointer border-[0.2vw] border-purple-600 rounded-lg bg-purple-200' type="button" value="Submit" onClick={handleSubmit}/>
+      </SpotlightCard>
+
+    </div>)
+}
+
+function GetImage() {
   const ImagesList = ImageList.images;
   const [imgCount, setImgCount] = useState(0);
 
@@ -80,11 +144,15 @@ export function GetImage() {
     setImgCount(newIndex);
   }
   return (<div className=' gap-[2vw] grid grid-cols-[1fr_8fr_1fr] auto-rows-fr h-full'>
-    <img onClick={nextImage} className='cursor-pointer self-center' src="/arrow_left.png" alt="sdadsa" />
+    <img onClick={nextImage} className='transition-transform duration-300
+                    hover:scale-110 cursor-pointer self-center' src="/arrow_left.png" alt="sdadsa" />
     <img className="rounded-xl justify-self-center max-w-full max-h-full h-full" src={ImagesList[imgCount]} alt="image" />
-    <img onClick={prevImage} className="cursor-pointer self-center" src="/arrow_right.png" alt="dsadsa" />
+    <img onClick={prevImage} className="duration-300
+                    hover:scale-110 cursor-pointer self-center" src="/arrow_right.png" alt="dsadsa" />
   </div>)
 }
+
+
 
 export function Clock() {
   // 1. Create the state
@@ -123,7 +191,7 @@ export function Clock() {
   );
 }
 
-export function UserName() {
+function UserName() {
   const allUsers = userData.users;
   const currentUser = allUsers[0];
   return (<h1>{currentUser.username}</h1>)
