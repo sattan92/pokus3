@@ -8,12 +8,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Use Environment Variables (Vercel will provide DATABASE_URL automatically)
+const isProduction = process.env.NODE_ENV === "production";
+
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false // Required for Neon/Vercel Postgres
-  }
+  ssl: isProduction 
+    ? { rejectUnauthorized: false } // Required for Neon
+    : false                         // Not used for local Postgres
 });
 
 // REGISTER
