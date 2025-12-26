@@ -1,7 +1,6 @@
 import { useState, useEffect, memo } from 'react'
 import './App.css'
 import './index.css'
-import userData from "./user.json"
 import LiquidChrome from './components/LiquidChrome';
 import SpotlightCard from './components/SpotlightCard';
 import ImageList from "./images.json"
@@ -11,14 +10,43 @@ const MemoizedLiquidChrome = memo(LiquidChrome);
 
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  function handleClick() {
-    setIsOpen(true)
-  };
+  // ADD THIS at the start of function App()
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+const [userName, setUserName] = useState("");
+const [modalType, setModalType] = useState<"login" | "register">("login");
 
-  function handleClose() {
-    setIsOpen(false);
+// Check for existing session when page loads
+useEffect(() => {
+  const savedUser = localStorage.getItem('username');
+  const token = localStorage.getItem('token');
+  if (savedUser && token) {
+    setIsLoggedIn(true);
+    setUserName(savedUser);
   }
+}, []);
+
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  setIsLoggedIn(false);
+  setUserName("");
+};
+
+// ADD THESE right after your handleLogout function
+const handleOpenLogin = () => {
+  setModalType("login");
+  setIsOpen(true);
+};
+
+const handleOpenRegister = () => {
+  setModalType("register");
+  setIsOpen(true);
+};
+
+const closeModals = () => setIsOpen(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
 
   return (
     <>
@@ -28,8 +56,20 @@ function App() {
           <div id='hodiny' className='text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl w-min'>
             <Clock></Clock>
           </div>
-          <h2 onClick={handleClick} className="md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">Login</h2>
-          <h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4'>Welcome: <UserName></UserName></h2>
+          {/* REPLACE the h2 tags in your return block with this */}
+{isLoggedIn ? (
+  <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">
+    Logout
+  </h2>
+) : (
+  <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">
+  Login
+</h2>
+)}
+
+<h2 className='md:p-[4vw] content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4'>
+  Welcome: {isLoggedIn ? userName : "Guest"}
+</h2>
           <div className='absolute -z-10 inset-0' style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
             <MemoizedLiquidChrome
               baseColor={CHROME_COLOR}
@@ -64,7 +104,16 @@ function App() {
 
           </SpotlightCard>
         </div>
-        {isOpen && <Register onClose={handleClose} />}
+        {/* Update the onSwitch line here */}
+{isOpen && (
+  modalType === "login" 
+    ? <Login 
+        onClose={closeModals} 
+        onSwitch={handleOpenRegister} 
+        setAuth={(name) => { setIsLoggedIn(true); setUserName(name); }} 
+      /> 
+    : <Register onClose={closeModals} />
+)}
       </div>
     </>
   )
@@ -99,11 +148,11 @@ function Register({ onClose }: { onClose: () => void }) {
 };
 
   return (
-    <div className='fixed justify-self-center mt-[-75%]'>
-      <SpotlightCard className="custom-spotlight-card w-[50vw] text-purple-600 font-bold text-2xl lg:text-[35px] md:text-[25px] grid grid-rows-8 gap-[1vw] justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
-        <div className='grid grid-cols-[9fr_1fr]'>
+    <div className='fixed place-self-center inset-0 z-50'>
+      <SpotlightCard className="custom-spotlight-card text-purple-600 w-full font-bold text-2xl lg:text-[35px] md:text-[25px] grid grid-rows-8 gap-[1vw] justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
+        <div className='grid grid-cols-[9fr_1fr] w-[100%]'>
           <h1 className='justify-self-center'>Register</h1>
-          <img className='max-h-[3vw] cursor-pointer' src="x.png" alt="" onClick={onClose} />
+          <img className='place-self-center max-h-[3vw] cursor-pointer' src="x.png" alt="" onClick={onClose} />
         </div>
         <h1>Username</h1>
         <input className='border-[0.2vw] border-black rounded-lg' type="text" value={username}
@@ -118,6 +167,53 @@ function Register({ onClose }: { onClose: () => void }) {
       </SpotlightCard>
 
     </div>)
+}
+
+function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: () => void, setAuth: (name: string) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleLogin() {
+    if (!email || !password) {
+      alert("Fill in all fields");
+      return;
+    }
+
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.username);
+      setAuth(data.username);
+      alert("Logged in!");
+      onClose();
+    } else {
+      alert(data.error || "Login failed");
+    }
+  }
+
+  return (
+    <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center bg-black/40'>
+      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 justify-center p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
+        <div className='flex justify-between items-center w-full'>
+          <h1 className='mx-auto'>Login</h1>
+          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
+        </div>
+        <h1>Email</h1>
+        <input className='border-2 border-black rounded-lg text-black font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <h1>Password</h1>
+        <input className='border-2 border-black rounded-lg text-black font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input className='hover:cursor-pointer border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin}/>
+        <p className='text-sm font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
+      </SpotlightCard>
+    </div>
+  );
 }
 
 function GetImage() {
@@ -189,12 +285,6 @@ export function Clock() {
       </div>
     </div>
   );
-}
-
-function UserName() {
-  const allUsers = userData.users;
-  const currentUser = allUsers[0];
-  return (<h1>{currentUser.username}</h1>)
 }
 
 export default App
