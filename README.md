@@ -3,8 +3,7 @@
 
 # TODO list
 
-1 fix register & login ui
-2 do dash board, clients, ...
+1 do dash board, clients, ...
 
 
 
