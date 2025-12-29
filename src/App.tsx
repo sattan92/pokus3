@@ -63,7 +63,7 @@ function App() {
 
   return (
     <>
-      <div className="all w-screen h-screen">
+      <div className="all w-screen h-full">
         {/* --- HEADER --- */}
         <div className='text-purple-600 font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
@@ -84,28 +84,29 @@ function App() {
               </h2>
             )}
           </div>
-          
+
           {/* MIDDLE: Welcome Message + Nav Links (Optional) */}
           <div className="h-full order-2 justify-self-center flex flex-col items-center">
-             <h2 className='h-full md:p-[2vw] content-center bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-2'>
-               Welcome:
-               <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
-             </h2>
+            <h2 className='h-full md:p-[2vw] content-center bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-2'>
+              Welcome:
+              <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
+            </h2>
           </div>
 
+          
+          </div>
           {/* BACKGROUND */}
-          <div className='absolute -z-10 inset-0' style={{ width: '100vw', height: '100vh', position: 'absolute' }}>
+          <div className='absolute -z-10 inset-0 h-full' style={{ width: '100vw', height: '350vh', position: 'absolute' }}>
             <MemoizedLiquidChrome
               baseColor={CHROME_COLOR}
               speed={0.2}
               amplitude={0.3}
               interactive={false} />
-          </div>
         </div>
 
         {/* --- PAGE CONTENT SWITCHER --- */}
         {/* This nested ternary replaces the black screen issue */}
-        
+
         {currentPath === '/download' ? (
           // === DOWNLOAD PAGE ===
           <div className="p-[5vw]">
@@ -122,13 +123,158 @@ function App() {
             </SpotlightCard>
           </div>
 
-        ) : currentPath === '/included_clients' ? (
+        ) : currentPath === '/clients' ? (
           // === ABOUT PAGE ===
-          <div className="p-[5vw]">
-            <SpotlightCard className="p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="text-4xl font-bold text-purple-600 mb-4">About Us</h1>
-              <p className="text-xl">This is a custom React application with a Node.js backend.</p>
-              <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
+          <div className="p-[2vw]">
+            <SpotlightCard className="p-8 text-4xl font-bold text-purple-600" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <h1 className="mb-4">Included Clients</h1>
+              <ol className='p-[7vw] list-decimal text-base md:text-2xl grid-cols-2 grid md:grid-cols-3 gap-y-[1vw] gap-x-[7vw]'>
+                {/*<li><a href="#[insert_name]">[name]</a></li>  PRIKLAD*/}
+                <li><a href="#mushroom-client">mushroom-client</a></li>
+                <li><a href="#mcc-premium-loader">mcc-premium-loader</a></li>
+                <li><a href="#asteria-rip">asteria-rip</a></li>
+                <li><a href="#astroline">astroline</a></li>
+                <li><a href="#atani">atani</a></li>
+                <li><a href="#aurora">aurora</a></li>
+                <li><a href="#bloody-client">bloody-client</a></li>
+                <li><a href="#diablox">diablox</a></li>
+                <li><a href="#dimasik">dimasik</a></li>
+                <li><a href="#evaware">evaware</a></li>
+                <li><a href="#fabuls">fabuls</a></li>
+                <li><a href="#flap-client">flap-client</a></li>
+                <li><a href="#francium">francium</a></li>
+                <li><a href="#goldgrinder">goldgrinder</a></li>
+                <li><a href="#gothaj">gothaj</a></li>
+                <li><a href="#grandline">grandline</a></li>
+                <li><a href="#grim">grim</a></li>
+                <li><a href="#helios">helios</a></li>
+                <li><a href="#krypton">krypton</a></li>
+                <li><a href="#kvn">kvn</a></li>
+                <li><a href="#litka">litka</a></li>
+                <li><a href="#neverbuy">neverbuy</a></li>
+                <li><a href="#nexus">nexus</a></li>
+                <li><a href="#north">north</a></li>
+                <li><a href="#november">november</a></li>
+                <li><a href="#opal">opal</a></li>
+                <li><a href="#prestige">prestige</a></li>
+                <li><a href="#pulse">pulse</a></li>
+                <li><a href="#ravenb-minus">ravenb-minus</a></li>
+                <li><a href="#sloth">sloth</a></li>
+                <li><a href="#rise">rise</a></li>
+                <li><a href="#thunderhack-deluxe">thunderhack-deluxe</a></li>
+                <li><a href="#vegaline">vegaline</a></li>
+                <li><a href="#virgin">virgin</a></li>
+                <li><a href="#warden">warden</a></li>
+              </ol>
+              {/*<h1 className="mb-4" id='[inset_name]'></h1>
+              <p className="md:text-xl text-base"></p>   PRIKLAD*/}
+              <div>
+                <h1 className="mb-4" id='mushroom-client'>mushroom-client</h1>
+                <p className="md:text-xl text-base">Advanced utility client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='mcc-premium-loader'>mcc-premium-loader</h1>
+                <p className="md:text-xl text-base">Premium loader for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='asteria-rip'>asteria-rip</h1>
+                <p className="md:text-xl text-base">Client details for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='astroline'>astroline</h1>
+                <p className="md:text-xl text-base">Astroline client features for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='atani'>atani</h1>
+                <p className="md:text-xl text-base">Atani utility set for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='aurora'>aurora</h1>
+                <p className="md:text-xl text-base">Aurora client documentation for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='bloody-client'>bloody-client</h1>
+                <p className="md:text-xl text-base">Bloody-client specifications for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='diablox'>diablox</h1>
+                <p className="md:text-xl text-base">Diablox features and modules for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='dimasik'>dimasik</h1>
+                <p className="md:text-xl text-base">Dimasik client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='evaware'>evaware</h1>
+                <p className="md:text-xl text-base">Evaware utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='fabuls'>fabuls</h1>
+                <p className="md:text-xl text-base">Fabuls client description for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='flap-client'>flap-client</h1>
+                <p className="md:text-xl text-base">Flap-client details for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='francium'>francium</h1>
+                <p className="md:text-xl text-base">Francium utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='goldgrinder'>goldgrinder</h1>
+                <p className="md:text-xl text-base">Goldgrinder client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='gothaj'>gothaj</h1>
+                <p className="md:text-xl text-base">Gothaj features for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='grandline'>grandline</h1>
+                <p className="md:text-xl text-base">Grandline client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='grim'>grim</h1>
+                <p className="md:text-xl text-base">Grim utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='helios'>helios</h1>
+                <p className="md:text-xl text-base">Helios client features for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='krypton'>krypton</h1>
+                <p className="md:text-xl text-base">Krypton modules for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='kvn'>kvn</h1>
+                <p className="md:text-xl text-base">KVN client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='litka'>litka</h1>
+                <p className="md:text-xl text-base">Litka utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='neverbuy'>neverbuy</h1>
+                <p className="md:text-xl text-base">Neverbuy client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='nexus'>nexus</h1>
+                <p className="md:text-xl text-base">Nexus client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='north'>north</h1>
+                <p className="md:text-xl text-base">North utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='november'>november</h1>
+                <p className="md:text-xl text-base">November client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='opal'>opal</h1>
+                <p className="md:text-xl text-base">Opal features for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='prestige'>prestige</h1>
+                <p className="md:text-xl text-base">Prestige client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='pulse'>pulse</h1>
+                <p className="md:text-xl text-base">Pulse utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='ravenb-minus'>ravenb-minus</h1>
+                <p className="md:text-xl text-base">Ravenb-minus for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='sloth'>sloth</h1>
+                <p className="md:text-xl text-base">Sloth client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='rise'>rise</h1>
+                <p className="md:text-xl text-base">Rise client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='thunderhack-deluxe'>thunderhack-deluxe</h1>
+                <p className="md:text-xl text-base">Thunderhack-deluxe for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='vegaline'>vegaline</h1>
+                <p className="md:text-xl text-base">Vegaline client for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='virgin'>virgin</h1>
+                <p className="md:text-xl text-base">Virgin utility for Minecraft [Version].</p>
+
+                <h1 className="mb-4" id='warden'>warden</h1>
+                <p className="md:text-xl text-base">Warden client for Minecraft [Version].</p>
+              </div>
+              <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer text-base md:text-lg">
                 Back to Home
               </button>
             </SpotlightCard>
@@ -149,11 +295,11 @@ function App() {
         ) : (
           // === DEFAULT HOME PAGE ===
           <>
-            <div className="md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] line bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-1.5 flex justify-center gap-8">
-               {/* NAVIGATION BAR INSIDE THE LINE */}
-               <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold text-white hover:text-purple-300 transition">Dashboard</span>
-               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold text-white hover:text-purple-300 transition">Download</span>
-               <span onClick={() => navigate('/included_clients')} className="cursor-pointer font-bold text-white hover:text-purple-300 transition">Included clients</span>
+            <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
+              {/* NAVIGATION BAR INSIDE THE LINE */}
+              <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold hover:text-purple-300 transition">Dashboard</span>
+              <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition">Download</span>
+              <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition">Clients</span>
             </div>
 
             <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
@@ -188,10 +334,10 @@ function App() {
         {isOpen && (
           modalType === "login"
             ? <Login
-                onClose={closeModals}
-                onSwitch={handleOpenRegister}
-                setAuth={(name) => { setIsLoggedIn(true); setUserName(name); }}
-              />
+              onClose={closeModals}
+              onSwitch={handleOpenRegister}
+              setAuth={(name) => { setIsLoggedIn(true); setUserName(name); }}
+            />
             : <Register onClose={closeModals} />
         )}
       </div>
@@ -204,46 +350,46 @@ function Register({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   async function handleSubmit() {
-  if (!username || !email || !password) {
-    alert("Fill in all fields");
-    return;
-  }
+    if (!username || !email || !password) {
+      alert("Fill in all fields");
+      return;
+    }
 
-  const res = await fetch("/api/users", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username,
-      email,
-      password,
-    }),
-  });
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
 
-  if (res.ok) {
-    alert("Registered successfully!");
-    onClose();
-  } else {
-    alert("Registration failed");
-  }
-};
+    if (res.ok) {
+      alert("Registered successfully!");
+      onClose();
+    } else {
+      alert("Registration failed");
+    }
+  };
 
   return (
     <div className='fixed place-self-center inset-0 z-50'>
       <SpotlightCard className="custom-spotlight-card text-purple-600 w-full font-bold text-2xl lg:text-[35px] md:text-[25px] grid grid-rows-8 gap-[1vw] justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
         <div className='grid grid-cols-[9fr_1fr] w-[100%]'>
           <h1 className='justify-self-center'>Register</h1>
-          <img className='place-self-center max-h-[3vw] cursor-pointer' src="x.png" alt="" onClick={onClose} />
+          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="" onClick={onClose} />
         </div>
         <h1>Username</h1>
-        <input className='border-[0.2vw] border-black rounded-lg' type="text" value={username}
+        <input className='border-1 md:border-2 border-black rounded-lg' type="text" value={username}
           onChange={(e) => setUsername(e.target.value)} />
         <h1>Email</h1>
-        <input className='border-[0.2vw] border-black rounded-lg' type="email" value={email}
+        <input className='border-1 md:border-2 border-black rounded-lg' type="email" value={email}
           onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
-        <input className='border-[0.2vw] border-black rounded-lg' type="password" value={password}
+        <input className='border-1 md:border-2 border-black rounded-lg' type="password" value={password}
           onChange={(e) => setPassword(e.target.value)} />
-        <input className='hover:cursor-pointer border-[0.2vw] border-purple-600 rounded-lg bg-purple-200' type="button" value="Submit" onClick={handleSubmit}/>
+        <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200' type="button" value="Submit" onClick={handleSubmit} />
       </SpotlightCard>
 
     </div>)
@@ -279,18 +425,18 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
   }
 
   return (
-    <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center bg-black/40'>
+    <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center'>
       <SpotlightCard className="custom-spotlight-card text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 justify-center p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
         <div className='flex justify-between items-center w-full'>
           <h1 className='mx-auto'>Login</h1>
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
         </div>
         <h1>Email</h1>
-        <input className='border-2 border-black rounded-lg text-black font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input className='border-1 md:border-2 border-black rounded-lg text-black font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
-        <input className='border-2 border-black rounded-lg text-black font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <input className='hover:cursor-pointer border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin}/>
-        <p className='text-sm font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
+        <input className='border-1 md:border-2 border-black rounded-lg text-black font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin} />
+        <p className='text-base md:text-xl font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
       </SpotlightCard>
     </div>
   );
