@@ -3,8 +3,6 @@ import { Renderer, Program, Mesh, Triangle } from 'ogl';
 
 import './LiquidChrome.css';
 
-
-
 interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
   baseColor?: [number, number, number];
   speed?: number;
@@ -29,7 +27,14 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const renderer = new Renderer({ antialias: true });
+    
+    // OPTIMIZATION 1: Disable antialias and cap DPR at 1 (Retina screens default to 2, which is 4x pixels)
+    const renderer = new Renderer({ 
+        antialias: false, 
+        dpr: Math.min(window.devicePixelRatio, 1),
+        alpha: false 
+    });
+    
     const gl = renderer.gl;
     gl.clearColor(1, 1, 1, 1);
 
@@ -44,7 +49,9 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     `;
 
     const fragmentShader = `
-      precision highp float;
+      // OPTIMIZATION 2: Switch to medium precision (faster on old GPUs, barely noticeable difference)
+      precision mediump float;
+      
       uniform float uTime;
       uniform vec3 uResolution;
       uniform vec3 uBaseColor;
@@ -58,7 +65,9 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
           vec2 fragCoord = uvCoord * uResolution.xy;
           vec2 uv = (2.0 * fragCoord - uResolution.xy) / min(uResolution.x, uResolution.y);
 
-          for (float i = 1.0; i < 10.0; i++){
+          // OPTIMIZATION 3: Reduce loop from 10.0 to 4.0. 
+          // 4 layers is usually enough for the liquid effect.
+          for (float i = 1.0; i < 4.0; i++){
               uv.x += uAmplitude / i * cos(i * uFrequencyX * uv.y + uTime + uMouse.x * 3.14159);
               uv.y += uAmplitude / i * cos(i * uFrequencyY * uv.x + uTime + uMouse.y * 3.14159);
           }
@@ -74,16 +83,9 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
       }
 
       void main() {
-          vec4 col = vec4(0.0);
-          int samples = 0;
-          for (int i = -1; i <= 1; i++){
-              for (int j = -1; j <= 1; j++){
-                  vec2 offset = vec2(float(i), float(j)) * (1.0 / min(uResolution.x, uResolution.y));
-                  col += renderImage(vUv + offset);
-                  samples++;
-              }
-          }
-          gl_FragColor = col / float(samples);
+          // OPTIMIZATION 4: Removed the nested 3x3 loop (Super Sampling).
+          // This single change makes the shader 9x faster.
+          gl_FragColor = renderImage(vUv);
       }
     `;
 
@@ -106,8 +108,8 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     const mesh = new Mesh(gl, { geometry, program });
 
     function resize() {
-      const scale = 1;
-      renderer.setSize(container.offsetWidth * scale, container.offsetHeight * scale);
+      // Ensure we use the renderer's size logic which now respects our lower DPR
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
       const resUniform = program.uniforms.uResolution.value as Float32Array;
       resUniform[0] = gl.canvas.width;
       resUniform[1] = gl.canvas.height;
@@ -153,24 +155,22 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     container.appendChild(gl.canvas);
 
     return () => {
-  cancelAnimationFrame(animationId);
-  window.removeEventListener('resize', resize);
-  
-  if (interactive) {
-    container.removeEventListener('mousemove', handleMouseMove);
-    container.removeEventListener('touchmove', handleTouchMove);
-  }
+        cancelAnimationFrame(animationId);
+        window.removeEventListener('resize', resize);
+        
+        if (interactive) {
+            container.removeEventListener('mousemove', handleMouseMove);
+            container.removeEventListener('touchmove', handleTouchMove);
+        }
 
-  // EXPLICIT GPU CLEANUP
-  geometry.remove(); // This deletes the vertex buffers
-  program.remove();  // This deletes the shaders
-
-  if (gl.canvas.parentElement) {
-    gl.canvas.parentElement.removeChild(gl.canvas);
-  }
-  
-  gl.getExtension('WEBGL_lose_context')?.loseContext();
-};
+        // Cleanup
+        geometry.remove();
+        program.remove();
+        if (gl.canvas.parentElement) {
+            gl.canvas.parentElement.removeChild(gl.canvas);
+        }
+        gl.getExtension('WEBGL_lose_context')?.loseContext();
+    };
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
   return <div ref={containerRef} className="liquidChrome-container" {...props} />;

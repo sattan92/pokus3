@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npx concurrently \"npm run frontend\" \"npm run backend\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "frontend": "vite",
+  "backend": "node server.js"
   },
   "dependencies": {
     "@react-three/fiber": "^9.4.2",

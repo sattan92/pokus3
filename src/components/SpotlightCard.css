@@ -1,44 +1,67 @@
 .card-spotlight {
   position: relative;
-  /* bg-white/20 */
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
+  
+  /* OPTIMIZATION 1: Use a smaller blur for huge containers. 
+     4px looks almost the same as 6px but is much easier to compute. */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 
-  /* backdrop-blur-md */
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px); /* For Safari support */
+  /* OPTIMIZATION 2: Force Hardware Acceleration */
+  transform: translateZ(0);
+  will-change: transform, backdrop-filter;
 
-  /* border border-white/20 */
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* OPTIMIZATION 3: Remove the heavy box-shadow. 
+     Instead, we use a slightly brighter border to give the "lifted" look. */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: none; 
 
-  /* shadow-xl */
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-              0 8px 10px -6px rgba(0, 0, 0, 0.1);
-
-  /* rounded-xl */
-  border-radius: 0.75rem; /* 12px */
-
-  /* p-8 */
-  padding: 2vw; /* 32px */
+  border-radius: 0.75rem;
+  padding: 2vw;
   overflow: hidden;
+  
   --mouse-x: 50%;
   --mouse-y: 50%;
-  --spotlight-color: rgba(255, 255, 255, 0.05);
+  --spotlight-color: rgba(255, 255, 255, 0.08);
 }
 
 .card-spotlight::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 80%);
+  inset: 0;
+  /* OPTIMIZATION 4: Hardware accelerate the spotlight itself */
+  transform: translateZ(0);
+  
+  /* Using a slightly tighter gradient helps the GPU mask it faster */
+  background: radial-gradient(
+    circle 300px at var(--mouse-x) var(--mouse-y), 
+    var(--spotlight-color), 
+    transparent 70%
+  );
+  
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
   pointer-events: none;
+}
+
+/* OPTIMIZATION 5: Only calculate the hover effect if the device can handle it */
+@media (hover: hover) {
+  .card-spotlight:hover::before {
+    opacity: 1;
+  }
 }
 
 .card-spotlight:hover::before,
 .card-spotlight:focus-within::before {
   opacity: 0.6;
+}
+
+
+/* Keep your existing .card-spotlight as is */
+
+/* Add this new modifier class */
+.card-spotlight.no-blur {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker background so text stays readable without the blur */
 }

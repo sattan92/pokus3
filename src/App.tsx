@@ -68,18 +68,18 @@ function App() {
         <div className='text-purple-600 font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
           {/* RIGHT: Clock */}
-          <div id='hodiny' className='h-full text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl w-min'>
+          <div id='hodiny' className='h-full text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
             <Clock />
           </div>
 
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">
+              <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-4">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-4">
+              <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-4">
                 Login
               </h2>
             )}
@@ -87,22 +87,22 @@ function App() {
 
           {/* MIDDLE: Welcome Message + Nav Links (Optional) */}
           <div className="h-full order-2 justify-self-center flex flex-col items-center">
-            <h2 className='h-full md:p-[2vw] content-center bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-2'>
+            <h2 className='h-full md:p-[2vw] content-center bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-2'>
               Welcome:
               <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
             </h2>
           </div>
 
-          
-          </div>
           {/* BACKGROUND */}
-          <div className='absolute -z-10 inset-0 h-full' style={{ width: '100vw', height: '350vh', position: 'absolute' }}>
+          <div className='fixed -z-10 inset-0 transform-gpufixed top-0 left-0 w-full h-full -z-10 transform-gpu' style={{ width: '100vw', height: '100vh', position: 'fixed' }}>
             <MemoizedLiquidChrome
               baseColor={CHROME_COLOR}
               speed={0.2}
               amplitude={0.3}
               interactive={false} />
         </div>
+          </div>
+          
 
         {/* --- PAGE CONTENT SWITCHER --- */}
         {/* This nested ternary replaces the black screen issue */}
@@ -110,7 +110,7 @@ function App() {
         {currentPath === '/download' ? (
           // === DOWNLOAD PAGE ===
           <div className="p-[5vw]">
-            <SpotlightCard className="p-8 text-center" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="text-4xl font-bold text-purple-600 mb-4">Download Client</h1>
               <p className="text-xl mb-6">Get the latest version of our software.</p>
               <button className="bg-purple-600 text-white p-4 rounded-xl hover:bg-purple-700 transition">
@@ -126,7 +126,7 @@ function App() {
         ) : currentPath === '/clients' ? (
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
-            <SpotlightCard className="p-8 text-4xl font-bold text-purple-600" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <SpotlightCard className="p-8 text-4xl font-bold text-purple-600 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="mb-4">Included Clients</h1>
               <ol className='p-[7vw] list-decimal text-base md:text-2xl grid-cols-2 grid md:grid-cols-3 gap-y-[1vw] gap-x-[7vw]'>
                 {/*<li><a href="#[insert_name]">[name]</a></li>  PRIKLAD*/}
@@ -283,7 +283,7 @@ function App() {
         ) : currentPath === '/dashboard' ? (
           // === ABOUT PAGE ===
           <div className="p-[5vw]">
-            <SpotlightCard className="p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <SpotlightCard className="p-8 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="text-4xl font-bold text-purple-600 mb-4">About Us</h1>
               <p className="text-xl">This is a custom React application with a Node.js backend.</p>
               <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
@@ -295,7 +295,7 @@ function App() {
         ) : (
           // === DEFAULT HOME PAGE ===
           <>
-            <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
+            <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
               <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold hover:text-purple-300 transition">Dashboard</span>
               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition">Download</span>
@@ -303,7 +303,7 @@ function App() {
             </div>
 
             <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
-              <SpotlightCard className="" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
                 <div className='ml-[1vw]'>
                   <ol className='grid grid-rows-5 h-min text-lg lg:text-[25px] md:text-[18px]'>
@@ -314,16 +314,16 @@ function App() {
                     <li>Free cam</li>
                   </ol></div>
               </SpotlightCard>
-              <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="no-blur custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Reviews</h1>
               </SpotlightCard>
-              <SpotlightCard className="custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
               </SpotlightCard>
             </div>
 
             <div className="p-[2vw]">
-              <SpotlightCard className="md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <div className='h-full'><GetImage /></div>
               </SpotlightCard>
             </div>
