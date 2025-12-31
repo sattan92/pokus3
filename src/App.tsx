@@ -381,13 +381,13 @@ function Register({ onClose }: { onClose: () => void }) {
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="" onClick={onClose} />
         </div>
         <h1>Username</h1>
-        <input className='border-1 md:border-2 border-black rounded-lg' type="text" value={username}
+        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="text" value={username}
           onChange={(e) => setUsername(e.target.value)} />
         <h1>Email</h1>
-        <input className='border-1 md:border-2 border-black rounded-lg' type="email" value={email}
+        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="email" value={email}
           onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
-        <input className='border-1 md:border-2 border-black rounded-lg' type="password" value={password}
+        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="password" value={password}
           onChange={(e) => setPassword(e.target.value)} />
         <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200' type="button" value="Submit" onClick={handleSubmit} />
       </SpotlightCard>
@@ -405,7 +405,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
       return;
     }
 
-    const res = await fetch("/api/login", {
+    const res = await fetch('http://localhost:3001/api/login', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -432,9 +432,9 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
         </div>
         <h1>Email</h1>
-        <input className='border-1 md:border-2 border-black rounded-lg text-black font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
-        <input className='border-1 md:border-2 border-black rounded-lg text-black font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin} />
         <p className='text-base md:text-xl font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
       </SpotlightCard>

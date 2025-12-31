@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "frontend": "vite",
-  "backend": "node server.js"
+    "backend": "node api/index.js"
   },
   "dependencies": {
     "@react-three/fiber": "^9.4.2",

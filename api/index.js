@@ -86,4 +86,9 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server finally running on http://localhost:${PORT}`);
+});
+
 export default app;
