@@ -68,18 +68,18 @@ function App() {
         <div className='text-purple-600 font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
           {/* RIGHT: Clock */}
-          <div id='hodiny' className='h-full text-start content-center md:p-[3vw] p-4 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
+          <div id='hodiny' className='h-full text-start content-center md:p-[3vw] p-3 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
             <Clock />
           </div>
 
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-4">
+              <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-4">
+              <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Login
               </h2>
             )}
@@ -111,9 +111,9 @@ function App() {
           // === DOWNLOAD PAGE ===
           <div className="p-[5vw]">
             <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="text-4xl font-bold text-purple-600 mb-4">Download Client</h1>
+              <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Client</h1>
               <p className="text-xl mb-6">Get the latest version of our software.</p>
-              <button className="bg-purple-600 text-white p-4 rounded-xl hover:bg-purple-700 transition">
+              <button className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                 Download .exe v1.0
               </button>
               <br />
@@ -127,17 +127,14 @@ function App() {
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
             <SpotlightCard className="p-8 text-4xl font-bold text-purple-600 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="mb-4">Included Clients</h1>
+              <h1 className="mb-3">Included Clients</h1>
               <ol className='p-[7vw] list-decimal text-base md:text-2xl grid-cols-2 grid md:grid-cols-3 gap-y-[1vw] gap-x-[7vw]'>
                 {/*<li><a href="#[insert_name]">[name]</a></li>  PRIKLAD*/}
-                <li><a href="#mushroom-client">mushroom-client</a></li>
-                <li><a href="#mcc-premium-loader">mcc-premium-loader</a></li>
                 <li><a href="#asteria-rip">asteria-rip</a></li>
                 <li><a href="#astroline">astroline</a></li>
                 <li><a href="#atani">atani</a></li>
                 <li><a href="#aurora">aurora</a></li>
                 <li><a href="#bloody-client">bloody-client</a></li>
-                <li><a href="#diablox">diablox</a></li>
                 <li><a href="#dimasik">dimasik</a></li>
                 <li><a href="#evaware">evaware</a></li>
                 <li><a href="#fabuls">fabuls</a></li>
@@ -166,113 +163,104 @@ function App() {
                 <li><a href="#virgin">virgin</a></li>
                 <li><a href="#warden">warden</a></li>
               </ol>
-              {/*<h1 className="mb-4" id='[inset_name]'></h1>
+              {/*<h1 className="mb-3" id='[inset_name]'></h1>
               <p className="md:text-xl text-base"></p>   PRIKLAD*/}
-              <div>
-                <h1 className="mb-4" id='mushroom-client'>mushroom-client</h1>
-                <p className="md:text-xl text-base">Advanced utility client for Minecraft [Version].</p>
+              <div className='grid md:grid-cols-2 p-[3vw] grid-rows-33 content-center gap-[1vw]'>
+                <h1 className="mb-3" id='asteria-rip'>Asteria-rip</h1>
+                <p className="md:text-xl text-base">PVP Ghost client - amazing 15$ client (1.19.4 - 1.20.1 fabric) (bind-f8)</p>
 
-                <h1 className="mb-4" id='mcc-premium-loader'>mcc-premium-loader</h1>
-                <p className="md:text-xl text-base">Premium loader for Minecraft [Version].</p>
+                <h1 className="mb-3" id='astroline'>Astroline</h1>
+                <p className="md:text-xl text-base">Universal - setup: 1. unzip 2. put .jar into version 3. start the astroline in launcher as instance</p>
 
-                <h1 className="mb-4" id='asteria-rip'>asteria-rip</h1>
-                <p className="md:text-xl text-base">Client details for Minecraft [Version].</p>
+                <h1 className="mb-3" id='atani'>Atani</h1>
+                <p className="md:text-xl text-base">Blatant PVP client - setup: 1. download and start .exe (1.8.9) (bind-RShift)</p>
 
-                <h1 className="mb-4" id='astroline'>astroline</h1>
-                <p className="md:text-xl text-base">Astroline client features for Minecraft [Version].</p>
+                <h1 className="mb-3" id='aurora'>Aurora</h1>
+                <p className="md:text-xl text-base">TH recode - Universal client, (1.20.4 fabric), -noverify required in args</p>
 
-                <h1 className="mb-4" id='atani'>atani</h1>
-                <p className="md:text-xl text-base">Atani utility set for Minecraft [Version].</p>
+                <h1 className="mb-3" id='bloody-client'>Bloody-client</h1>
+                <p className="md:text-xl text-base">Paid (1.20.1 fabric) skid of Coffee and TH</p>
 
-                <h1 className="mb-4" id='aurora'>aurora</h1>
-                <p className="md:text-xl text-base">Aurora client documentation for Minecraft [Version].</p>
+                <h1 className="mb-3" id='dimasik'>Dimasik</h1>
+                <p className="md:text-xl text-base">Skid of russian client - setup: 1. put .jar into version 2. start the client 3. set the args to -noverify (1.16.5)</p>
 
-                <h1 className="mb-4" id='bloody-client'>bloody-client</h1>
-                <p className="md:text-xl text-base">Bloody-client specifications for Minecraft [Version].</p>
+                <h1 className="mb-3" id='evaware'>Evaware</h1>
+                <p className="md:text-xl text-base">SwordHVH + CPVP Vegaline Skid - setup: 1. put .jar into version 2. start the client 3. set the args to -noverify (1.16.5)</p>
 
-                <h1 className="mb-4" id='diablox'>diablox</h1>
-                <p className="md:text-xl text-base">Diablox features and modules for Minecraft [Version].</p>
+                <h1 className="mb-3" id='fabuls'>Fabuls</h1>
+                <p className="md:text-xl text-base">Universal client - setup: 1. Unzip Fabuls, move "client.jar" into "Fabuls/client" folder, run FabulsLauncher.exe (bind - RCTRL)</p>
 
-                <h1 className="mb-4" id='dimasik'>dimasik</h1>
-                <p className="md:text-xl text-base">Dimasik client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='flap-client'>Flap-client</h1>
+                <p className="md:text-xl text-base">1.8.9 hybrid client - !Currently Unavailable due to DMCA takedown!!</p>
 
-                <h1 className="mb-4" id='evaware'>evaware</h1>
-                <p className="md:text-xl text-base">Evaware utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='francium'>Francium</h1>
+                <p className="md:text-xl text-base">CPVP ghost client (1.20.4 fabric)</p>
 
-                <h1 className="mb-4" id='fabuls'>fabuls</h1>
-                <p className="md:text-xl text-base">Fabuls client description for Minecraft [Version].</p>
+                <h1 className="mb-3" id='goldgrinder'>goldgrinder</h1>
+                <p className="md:text-xl text-base">300$ hypixel client (1.8.9 forge!)</p>
 
-                <h1 className="mb-4" id='flap-client'>flap-client</h1>
-                <p className="md:text-xl text-base">Flap-client details for Minecraft [Version].</p>
+                <h1 className="mb-3" id='gothaj'>Gothaj</h1>
+                <p className="md:text-xl text-base">Number 2 intave cheat - setup: 1. put jar into /version 2. start the instance in launcher</p>
 
-                <h1 className="mb-4" id='francium'>francium</h1>
-                <p className="md:text-xl text-base">Francium utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='grandline'>Grandline</h1>
+                <p className="md:text-xl text-base">Ghost C/PVP - paid continue of virgin client(1.20.1 fabric)</p>
 
-                <h1 className="mb-4" id='goldgrinder'>goldgrinder</h1>
-                <p className="md:text-xl text-base">Goldgrinder client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='grim'>Grim</h1>
+                <p className="md:text-xl text-base">Ass cheat for lunar - setup 1. run .exe 2. start MC in lunar with fabric(1.16.5 1.20.1/4)</p>
 
-                <h1 className="mb-4" id='gothaj'>gothaj</h1>
-                <p className="md:text-xl text-base">Gothaj features for Minecraft [Version].</p>
+                <h1 className="mb-3" id='helios'>Helios</h1>
+                <p className="md:text-xl text-base">!!DMA takedown, UNAVAILABLE!</p>
 
-                <h1 className="mb-4" id='grandline'>grandline</h1>
-                <p className="md:text-xl text-base">Grandline client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='krypton'>Krypton</h1>
+                <p className="md:text-xl text-base">Ghost client with focus on Donut SMP (1.21.1 fabric)</p>
 
-                <h1 className="mb-4" id='grim'>grim</h1>
-                <p className="md:text-xl text-base">Grim utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='kvn'>Kvn</h1>
+                <p className="md:text-xl text-base">Oldfag mod for farming (1.12.2 forge!) setup: 1. download and put in /mods with baritone 2. run forge</p>
 
-                <h1 className="mb-4" id='helios'>helios</h1>
-                <p className="md:text-xl text-base">Helios client features for Minecraft [Version].</p>
+                <h1 className="mb-3" id='litka'>Litka</h1>
+                <p className="md:text-xl text-base">Elytra pvp client (1.16.5) (bind: RShift)</p>
 
-                <h1 className="mb-4" id='krypton'>krypton</h1>
-                <p className="md:text-xl text-base">Krypton modules for Minecraft [Version].</p>
+                <h1 className="mb-3" id='neverbuy'>Neverbuy</h1>
+                <p className="md:text-xl text-base">RUSSIAN plugin for AH plugins (1.16.5 fabric !lithium needed)</p>
 
-                <h1 className="mb-4" id='kvn'>kvn</h1>
-                <p className="md:text-xl text-base">KVN client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='nexus'>Nexus</h1>
+                <p className="md:text-xl text-base">Private hybrid client (1.21 fabric) !use -noverify in arguments</p>
 
-                <h1 className="mb-4" id='litka'>litka</h1>
-                <p className="md:text-xl text-base">Litka utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='north'>North</h1>
+                <p className="md:text-xl text-base">MCP client (1.8.9) setup - 1. put into /versions 2. run in launcher</p>
 
-                <h1 className="mb-4" id='neverbuy'>neverbuy</h1>
-                <p className="md:text-xl text-base">Neverbuy client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='november'>November</h1>
+                <p className="md:text-xl text-base">Paid MCP client (1.8.9) setup - 1. unzip 2. press start-client.bat</p>
 
-                <h1 className="mb-4" id='nexus'>nexus</h1>
-                <p className="md:text-xl text-base">Nexus client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='opal'>Opal</h1>
+                <p className="md:text-xl text-base">100$ client (1.20.4 fabric)</p>
 
-                <h1 className="mb-4" id='north'>north</h1>
-                <p className="md:text-xl text-base">North utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='prestige'>Prestige client</h1>
+                <p className="md:text-xl text-base">Ghost CPVP client DMCA takedown!</p>
 
-                <h1 className="mb-4" id='november'>november</h1>
-                <p className="md:text-xl text-base">November client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='pulse'>pulse</h1>
+                <p className="md:text-xl text-base">Pul</p>
 
-                <h1 className="mb-4" id='opal'>opal</h1>
-                <p className="md:text-xl text-base">Opal features for Minecraft [Version].</p>
+                <h1 className="mb-3" id='ravenb-minus'>ravenb-minus</h1>
+                <p className="md:text-xl text-base">Ra</p>
 
-                <h1 className="mb-4" id='prestige'>prestige</h1>
-                <p className="md:text-xl text-base">Prestige client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='sloth'>sloth</h1>
+                <p className="md:text-xl text-base">Sl</p>
 
-                <h1 className="mb-4" id='pulse'>pulse</h1>
-                <p className="md:text-xl text-base">Pulse utility for Minecraft [Version].</p>
+                <h1 className="mb-3" id='rise'>rise</h1>
+                <p className="md:text-xl text-base">R</p>
 
-                <h1 className="mb-4" id='ravenb-minus'>ravenb-minus</h1>
-                <p className="md:text-xl text-base">Ravenb-minus for Minecraft [Version].</p>
+                <h1 className="mb-3" id='thunderhack-deluxe'>thunderhack-deluxe</h1>
+                <p className="md:text-xl text-base">Thunderh</p>
 
-                <h1 className="mb-4" id='sloth'>sloth</h1>
-                <p className="md:text-xl text-base">Sloth client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='vegaline'>vegaline</h1>
+                <p className="md:text-xl text-base">Vegal</p>
 
-                <h1 className="mb-4" id='rise'>rise</h1>
-                <p className="md:text-xl text-base">Rise client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='virgin'>virgin</h1>
+                <p className="md:text-xl text-base">Virg</p>
 
-                <h1 className="mb-4" id='thunderhack-deluxe'>thunderhack-deluxe</h1>
-                <p className="md:text-xl text-base">Thunderhack-deluxe for Minecraft [Version].</p>
-
-                <h1 className="mb-4" id='vegaline'>vegaline</h1>
-                <p className="md:text-xl text-base">Vegaline client for Minecraft [Version].</p>
-
-                <h1 className="mb-4" id='virgin'>virgin</h1>
-                <p className="md:text-xl text-base">Virgin utility for Minecraft [Version].</p>
-
-                <h1 className="mb-4" id='warden'>warden</h1>
-                <p className="md:text-xl text-base">Warden client for Minecraft [Version].</p>
+                <h1 className="mb-3" id='warden'>warden</h1>
+                <p className="md:text-xl text-base">War</p>
               </div>
               <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer text-base md:text-lg">
                 Back to Home
@@ -284,7 +272,7 @@ function App() {
           // === ABOUT PAGE ===
           <div className="p-[5vw]">
             <SpotlightCard className="p-8 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="text-4xl font-bold text-purple-600 mb-4">About Us</h1>
+              <h1 className="text-4xl font-bold text-purple-600 mb-3">About Us</h1>
               <p className="text-xl">This is a custom React application with a Node.js backend.</p>
               <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
                 Back to Home
@@ -428,7 +416,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
 
   return (
     <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center'>
-      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 justify-center p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
+      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
         <div className='flex justify-between items-center w-full'>
           <h1 className='mx-auto'>Login</h1>
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
