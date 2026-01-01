@@ -340,8 +340,8 @@ function App() {
 
 
 // Add { loggedIn } inside the parentheses
-function LicenseBadge({ loggedIn }) {
-  const [license, setLicense] = useState(null); // null = loading
+function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
+  const [license, setLicense] = useState<boolean | null>(null); // null = loading
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -360,7 +360,7 @@ function LicenseBadge({ loggedIn }) {
       .then(res => res.json())
       .then(data => {
         // data.status is now true or false from your DB
-        setLicense(data.status); 
+        setLicense(Boolean(data.status));
         setLoading(false);
       })
       .catch(() => {
