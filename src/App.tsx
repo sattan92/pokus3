@@ -165,7 +165,7 @@ function App() {
               </ol>
               {/*<h1 className="mb-3" id='[inset_name]'></h1>
               <p className="md:text-xl text-base"></p>   PRIKLAD*/}
-              <div className='grid md:grid-cols-2 p-[3vw] grid-rows-33 content-center gap-[1vw]'>
+              <div className='grid md:grid-cols-2 p-[3vw] grid-rows-32 content-center gap-[1vw]'>
                 <h1 className="mb-3" id='asteria-rip'>Asteria-rip</h1>
                 <p className="md:text-xl text-base">PVP Ghost client - amazing 15$ client (1.19.4 - 1.20.1 fabric) (bind-f8)</p>
 
@@ -261,12 +261,13 @@ function App() {
 
                 <h1 className="mb-3" id='warden'>Warden</h1>
                 <p className="md:text-xl text-base">1$ Russian blatant Sword PVP - skidded af (1.16.5)</p>
+              </div>
               <div className='flex justify-center'>
-              <button onClick={() => navigate('/')} className="mt-[-16px] m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-3">
+              <button onClick={() => navigate('/')} className="mt-[-16px] m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
                 Back to Home
               </button>
               </div>
-              </div>
+              
               
             </SpotlightCard>
           </div>
