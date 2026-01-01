@@ -127,7 +127,7 @@ function App() {
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
             <SpotlightCard className="p-8 text-4xl font-bold text-purple-600 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="mb-3">Included Clients</h1>
+              <h1 className="mb-3 text-center mt-3">Included Clients</h1>
               <ol className='p-[7vw] list-decimal text-base md:text-2xl grid-cols-2 grid md:grid-cols-3 gap-y-[1vw] gap-x-[7vw]'>
                 {/*<li><a href="#[insert_name]">[name]</a></li>  PRIKLAD*/}
                 <li><a href="#asteria-rip">asteria-rip</a></li>
@@ -238,43 +238,50 @@ function App() {
                 <h1 className="mb-3" id='prestige'>Prestige client</h1>
                 <p className="md:text-xl text-base">Ghost CPVP client DMCA takedown!</p>
 
-                <h1 className="mb-3" id='pulse'>pulse</h1>
-                <p className="md:text-xl text-base">Pul</p>
+                <h1 className="mb-3" id='pulse'>Pulse</h1>
+                <p className="md:text-xl text-base">Private blatant CPVP (1.21) (bind: RCTRL)</p>
 
-                <h1 className="mb-3" id='ravenb-minus'>ravenb-minus</h1>
-                <p className="md:text-xl text-base">Ra</p>
+                <h1 className="mb-3" id='ravenb-minus'>Ravenb-minus</h1>
+                <p className="md:text-xl text-base">Ass client (1.8.9 fabric) (use -noverify in JVM args)</p>
 
-                <h1 className="mb-3" id='sloth'>sloth</h1>
-                <p className="md:text-xl text-base">Sl</p>
+                <h1 className="mb-3" id='sloth'>Sloth</h1>
+                <p className="md:text-xl text-base">Raven skid, no bypass, command based (1.8.9 fabric) </p>
 
-                <h1 className="mb-3" id='rise'>rise</h1>
-                <p className="md:text-xl text-base">R</p>
+                <h1 className="mb-3" id='rise'>Rise</h1>
+                <p className="md:text-xl text-base">FILE NOT AVAILABLE</p>
 
-                <h1 className="mb-3" id='thunderhack-deluxe'>thunderhack-deluxe</h1>
-                <p className="md:text-xl text-base">Thunderh</p>
+                <h1 className="mb-3" id='thunderhack-deluxe'>Thunderhack-deluxe</h1>
+                <p className="md:text-xl text-base">Paid version of TH (1.20.1)</p>
 
-                <h1 className="mb-3" id='vegaline'>vegaline</h1>
-                <p className="md:text-xl text-base">Vegal</p>
+                <h1 className="mb-3" id='vegaline'>Vegaline</h1>
+                <p className="md:text-xl text-base">FILE NOT AVAILABLE</p>
 
-                <h1 className="mb-3" id='virgin'>virgin</h1>
-                <p className="md:text-xl text-base">Virg</p>
+                <h1 className="mb-3" id='virgin'>Virgin</h1>
+                <p className="md:text-xl text-base">Mid paid skidded ghost client for C/PVP (1.21 fabric)</p>
 
-                <h1 className="mb-3" id='warden'>warden</h1>
-                <p className="md:text-xl text-base">War</p>
-              </div>
-              <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer text-base md:text-lg">
+                <h1 className="mb-3" id='warden'>Warden</h1>
+                <p className="md:text-xl text-base">1$ Russian blatant Sword PVP - skidded af (1.16.5)</p>
+              <div className='flex justify-center'>
+              <button onClick={() => navigate('/')} className="mt-[-16px] m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-3">
                 Back to Home
               </button>
+              </div>
+              </div>
+              
             </SpotlightCard>
           </div>
 
         ) : currentPath === '/dashboard' ? (
-          // === ABOUT PAGE ===
+          // === DAHBOARD ===
           <div className="p-[5vw]">
-            <SpotlightCard className="p-8 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="text-4xl font-bold text-purple-600 mb-3">About Us</h1>
-              <p className="text-xl">This is a custom React application with a Node.js backend.</p>
-              <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
+            <SpotlightCard className="grid gird-rows-7 p-8 no-blur text-purple-600 text-xl" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <h1 className="text-4xl font-bold mb-3">Dashboard</h1>
+              <div className='flex'><p>Service status:</p> <DbCheck/></div>
+              <div className='flex space-x-8'><p>Name: </p> <p className='font-bold'> {isLoggedIn ? userName : "Guest"}</p></div>
+              <div className='flex space-x-8'><p>License:</p><LicenseBadge loggedIn={isLoggedIn}/></div>
+              <p className='mt-[-2px]'>este nieco</p>
+              <p>Change password</p>
+              <button onClick={() => navigate('/')} className="m-2 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-2 mr-[20vw] font-semibold ml-[20vw]">
                 Back to Home
               </button>
             </SpotlightCard>
@@ -291,22 +298,20 @@ function App() {
             </div>
 
             <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
-              <SpotlightCard className="no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="grid no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
-                <div className='ml-[1vw]'>
-                  <ol className='grid grid-rows-5 h-min text-lg lg:text-[25px] md:text-[18px]'>
-                    <li>Killaura</li>
-                    <li>No-fall</li>
-                    <li>Anti-Knockback</li>
-                    <li>Flight</li>
-                    <li>Free cam</li>
-                  </ol></div>
+                <p>Be on top of the leaderboard.</p>
+                <p>Enjoy clients for every type of gameplay.</p>
+                <p>Right now we have 32 fully functional paid cheats.</p>
               </SpotlightCard>
-              <SpotlightCard className="no-blur custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
-                <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Reviews</h1>
+              <SpotlightCard className="no-blur custom-spotlight-card grid " spotlightColor="rgba(108, 67, 255, 0.59)">
+                <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>About us</h1>
+                <p>We offer wide variety of cheats for very affordable price.</p>
+                <button className='text-black bg-purple-600 rounded-xl p-3 text-3xl '>BUY NOW</button>
               </SpotlightCard>
-              <SpotlightCard className="no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
+                <p>Price for our product is <span className='text-2xl text-bold'>9.99$</span> for a lifetime license.* <br /> You will receive acces to our products right after purchase.</p>
               </SpotlightCard>
             </div>
 
@@ -333,6 +338,91 @@ function App() {
   )
 }
 
+
+// Add { loggedIn } inside the parentheses
+function LicenseBadge({ loggedIn }) {
+  const [license, setLicense] = useState(null); // null = loading
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setLoading(false);
+      return;
+    }
+
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    const token = localStorage.getItem('token');
+
+    fetch(`${baseUrl}/api/licence`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        // data.status is now true or false from your DB
+        setLicense(data.status); 
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [loggedIn]);
+
+  // CSS Logic:
+  // If loading: gray
+  // If license is exactly true: green
+  // Otherwise (false or null): red
+  const statusColor = loading ? 'text-gray-400' : (license === true ? 'text-green-500' : 'text-red-500');
+  const statusText = loading ? 'LOADING...' : (license === true ? 'ACTIVE' : 'INACTIVE');
+
+  return (
+    <div className="flex items-center">
+      <span className={`text-xl font-bold mt-0.5 ${statusColor}`}>
+        {statusText}
+      </span>
+    </div>
+  );
+}
+
+function DbCheck() {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('Checking...');
+  
+  const checkDb = async () => {
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    setLoading(true);
+    try {
+      // Use the absolute URL to avoid 404
+      const response = await fetch(`${baseUrl}/api/db-check`);
+      const data = await response.json();
+      
+      // Even if 429 (Cooldown), we use the 'connected' boolean from backend
+      setStatus(data.connected ? 'online' : 'offline');
+    } catch (error) {
+      console.error("DB Check error:", error);
+      setStatus("offline");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    checkDb();
+    const interval = setInterval(checkDb, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex ml-4 items-center space-x-2 text-sm">
+      <span className={`h-3 w-3 rounded-full ${
+        status === 'online' ? 'bg-green-500' : 'bg-red-500 animate-pulse'
+      }`} />
+      <span className={`text-xl font-bold ${loading ? 'opacity-50' : 'opacity-100'}`}>
+        {status.toUpperCase()}
+      </span>
+    </div>
+  );
+}
+
 function Register({ onClose }: { onClose: () => void }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -342,8 +432,8 @@ function Register({ onClose }: { onClose: () => void }) {
       alert("Fill in all fields");
       return;
     }
-
-    const res = await fetch("/api/users", {
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    const res = await fetch(`${baseUrl}/api/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
