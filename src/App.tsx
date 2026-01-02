@@ -8,6 +8,9 @@ import ImageList from "./images.json"
 const CHROME_COLOR: [number, number, number] = [0.05, 0, 0.1];
 const MemoizedLiquidChrome = memo(LiquidChrome);
 
+interface LicenseData {
+  status: string;
+}
 
 function App() {
   // --- 1. NEW NAVIGATION STATE (Required for pages) ---
@@ -75,11 +78,12 @@ function App() {
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleOpenLogin} className="transition-transform duration-300
+                    hover:scale-110 md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Login
               </h2>
             )}
@@ -100,9 +104,9 @@ function App() {
               speed={0.2}
               amplitude={0.3}
               interactive={false} />
-        </div>
           </div>
-          
+        </div>
+
 
         {/* --- PAGE CONTENT SWITCHER --- */}
         {/* This nested ternary replaces the black screen issue */}
@@ -263,12 +267,12 @@ function App() {
                 <p className="md:text-xl text-base">1$ Russian blatant Sword PVP - skidded af (1.16.5)</p>
               </div>
               <div className='flex justify-center'>
-              <button onClick={() => navigate('/')} className="mt-[-16px] m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
-                Back to Home
-              </button>
+                <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 mt-[-16px] m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                  Back to Home
+                </button>
               </div>
-              
-              
+
+
             </SpotlightCard>
           </div>
 
@@ -277,12 +281,12 @@ function App() {
           <div className="p-[5vw]">
             <SpotlightCard className="grid gird-rows-7 p-8 no-blur text-purple-600 text-xl" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="text-4xl font-bold mb-3">Dashboard</h1>
-              <div className='flex'><p>Service status:</p> <DbCheck/></div>
+              <div className='flex'><p>Service status:</p> <DbCheck /></div>
               <div className='flex space-x-8'><p>Name: </p> <p className='font-bold'> {isLoggedIn ? userName : "Guest"}</p></div>
-              <div className='flex space-x-8'><p>License:</p><LicenseBadge loggedIn={isLoggedIn}/></div>
-              <p className='mt-[-2px]'>este nieco</p>
+              <div className='flex space-x-8'><p>License:</p><LicenseBadge loggedIn={isLoggedIn} /></div>
+              <div className='flex mt-[-2px] gap-x-8'><p className=''>Expiry date:</p><GetExpire/></div>
               <p>Change password</p>
-              <button onClick={() => navigate('/')} className="m-2 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-2 mr-[20vw] font-semibold ml-[20vw]">
+              <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 m-2 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-2 mr-[20vw] font-semibold ml-[20vw]">
                 Back to Home
               </button>
             </SpotlightCard>
@@ -293,9 +297,9 @@ function App() {
           <>
             <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
-              <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold hover:text-purple-300 transition">Dashboard</span>
-              <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition">Download</span>
-              <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition">Clients</span>
+              <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Dashboard</span>
+              <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
+              <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
             </div>
 
             <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
@@ -308,11 +312,13 @@ function App() {
               <SpotlightCard className="no-blur custom-spotlight-card grid " spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>About us</h1>
                 <p>We offer wide variety of cheats for very affordable price.</p>
-                <button className='text-black bg-purple-600 rounded-xl p-3 text-3xl '>BUY NOW</button>
+                <p>You will receive acces to our products right after purchase.</p>
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                <p>Price for our product is <span className='text-2xl text-bold'>9.99$</span> for a lifetime license.* <br /> You will receive acces to our products right after purchase.</p>
+                <p>Price for our product is <span className='text-2xl text-bold'>9.99$</span> for a lifetime license.* </p>         
+                <button className='text-black bg-purple-600 rounded-xl p-3 text-3xl '>BUY NOW</button>
+
               </SpotlightCard>
             </div>
 
@@ -339,7 +345,56 @@ function App() {
   )
 }
 
+function GetExpire() {
 
+  const [expire, setExpire] = useState<null | LicenseData>(null);
+  useEffect(() => {
+    async function getInfo() {
+  try {
+    // 1. Get the key from the pocket (localStorage)
+    const token = localStorage.getItem('token');
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+
+    // 2. Send the request WITH the Authorization header
+    const response = await fetch(`${baseUrl}/api/get-expire`, {
+      method: 'GET',
+      headers: { 
+        'Authorization': `Bearer ${token}` // Showing the ID card to the bouncer
+      }
+    });
+    
+    if (!response.ok) {
+        throw new Error("Server said: " + response.status);
+    }
+
+    const data = await response.json();
+    setExpire(data);
+  } catch (error) {
+    console.log("THE FUMBLE ERROR:", error);
+    setExpire({status: "error"});
+  }
+}
+    getInfo();
+  }, []);
+
+  if (!expire) {
+    return (
+      <div>
+        <p className='text-grey-500'>Expiry date loading...</p>
+      </div>
+    )
+  } else if (expire.status === "error") {
+      return (
+        <div><p>Error</p></div>
+      )
+  }
+  else {
+    return (
+      <div>{expire.status === "never" ? <p className='text-green-500'>Never</p> : <p className='text-red-500'>No expiry date</p>}</div>
+    )
+  } 
+
+}
 // Add { loggedIn } inside the parentheses
 function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
   const [license, setLicense] = useState<boolean | null>(null); // null = loading
@@ -388,7 +443,7 @@ function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
 function DbCheck() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('Checking...');
-  
+
   const checkDb = async () => {
     const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
     setLoading(true);
@@ -396,7 +451,7 @@ function DbCheck() {
       // Use the absolute URL to avoid 404
       const response = await fetch(`${baseUrl}/api/db-check`);
       const data = await response.json();
-      
+
       // Even if 429 (Cooldown), we use the 'connected' boolean from backend
       setStatus(data.connected ? 'online' : 'offline');
     } catch (error) {
@@ -414,9 +469,8 @@ function DbCheck() {
 
   return (
     <div className="flex ml-4 items-center space-x-2 text-sm">
-      <span className={`h-3 w-3 rounded-full ${
-        status === 'online' ? 'bg-green-500' : 'bg-red-500 animate-pulse'
-      }`} />
+      <span className={`h-3 w-3 rounded-full ${status === 'online' ? 'bg-green-500' : 'bg-red-500 animate-pulse'
+        }`} />
       <span className={`text-xl font-bold ${loading ? 'opacity-50' : 'opacity-100'}`}>
         {status.toUpperCase()}
       </span>
@@ -582,10 +636,10 @@ export function Clock() {
   return (
     <div className="cas" >
       <div className="cas1 ">
-        <h1 >{format(time.getHours())}:</h1>
+        <h1 >{format(time.getHours())}</h1>
       </div>
       <div className="cas2">
-        <h1 >{format(time.getMinutes())}:</h1>
+        <h1 >{format(time.getMinutes())}</h1>
       </div>
       <div className="cas3">
         <h1 >{format(time.getSeconds())}</h1>
