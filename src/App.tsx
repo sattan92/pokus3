@@ -47,6 +47,13 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
   const [modalType, setModalType] = useState<"login" | "register">("login");
   const [isOpen, setIsOpen] = useState(false);
 
+  function loginAlert() {
+    if (isLoggedIn === false) {
+      alert("You are not logged in")
+    }
+  } 
+
+
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     const token = localStorage.getItem('token');
@@ -307,7 +314,7 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
           <>
             <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
-              <span onClick={() => navigate('/dashboard')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Dashboard</span>
+              <span onClick={() => {navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert()}} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
               <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
             </div>
@@ -405,6 +412,7 @@ function GetExpire() {
   } 
 
 }
+
 
 function GetDownloadLink() {
   return "/dashboard"

@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 // Use a secret key for signing tokens (Stored in .env)
-const JWT_SECRET = process.env.JWT_SECRET || "your_fallback_secret_for_local_dev";
+const JWT_SECRET = process.env.JWT_SECRET || "apsoijdoaisjdoiaJsoidjaoisjdoijasoidjoaisjd";
 
 const isProduction = process.env.NODE_ENV === "production";
 
