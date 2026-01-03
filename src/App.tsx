@@ -90,30 +90,30 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
         <div className='text-purple-600 font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
           {/* RIGHT: Clock */}
-          <div id='hodiny' className='h-full text-start content-center md:p-[3vw] p-3 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
+          <div id='hodiny' className='h-full pt-[1vw] text-start content-center flex md:p-[1vw] md:px-[3vw] p-3 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
             <Clock />
           </div>
 
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[1vw] pt-[0.vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="transition-transform duration-300
-                    hover:scale-110 md:p-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleOpenLogin} className="transition  hover:text-purple-300 duration-300 md:p-[1vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
                 Login
               </h2>
             )}
           </div>
 
           {/* MIDDLE: Welcome Message + Nav Links (Optional) */}
-          <div className="h-full order-2 justify-self-center flex flex-col items-center">
-            <h2 className='h-full md:p-[2vw] content-center bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-2'>
-              Welcome:
-              <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
-            </h2>
+          <div className="h-full md:p-[0.5vw] md:px-[5vw] p-2 order-2  justify-self-center flex items-center bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl">
+            <div className='md:flex md:gap-4'>
+            <h2 className='content-center '>
+              Welcome:</h2>
+            <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
+            </div>
           </div>
 
           {/* BACKGROUND */}
@@ -312,14 +312,14 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
         ) : (
           // === DEFAULT HOME PAGE ===
           <>
-            <div className="text-purple-600 md:p-5 md:mt-[1vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
+            <div className="text-purple-600 md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
               <span onClick={() => {navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert()}} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
               <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
             </div>
 
-            <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
+            <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[0.3vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
               <SpotlightCard className="grid no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
                 <p>Be on top of the leaderboard.</p>
@@ -712,15 +712,12 @@ export function Clock() {
   }
 
   return (
-    <div className="cas" >
+    <div className="cas flex gap-1 place-self-center" >
       <div className="cas1 ">
-        <h1 >{format(time.getHours())}</h1>
+        <h1 >{format(time.getHours())}:</h1>
       </div>
       <div className="cas2">
         <h1 >{format(time.getMinutes())}</h1>
-      </div>
-      <div className="cas3">
-        <h1 >{format(time.getSeconds())}</h1>
       </div>
     </div>
   );
