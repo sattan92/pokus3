@@ -1,9 +1,11 @@
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo, useRef } from 'react'
 import './App.css'
 import './index.css'
 import LiquidChrome from './components/LiquidChrome';
 import SpotlightCard from './components/SpotlightCard';
 import ImageList from "./images.json"
+import ReCAPTCHA from "react-google-recaptcha";
+
 
 const CHROME_COLOR: [number, number, number] = [0.05, 0, 0.1];
 const MemoizedLiquidChrome = memo(LiquidChrome);
@@ -12,15 +14,25 @@ interface LicenseData {
   status: string;
 }
 
+interface NavObject {
+  url: string;
+  data?: any;
+}
+
 function App() {
   // --- 1. NEW NAVIGATION STATE (Required for pages) ---
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
+const [currentPath, setCurrentPath] = useState<string | NavObject>(window.location.pathname);
   // Helper to change URL without refreshing
-  const navigate = (path: string) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
-  };
+  const navigate = (path: string | NavObject) => {
+  // Determine what the actual URL string is
+  const urlString = typeof path === 'string' ? path : path.url;
+
+  // 1. Give the browser the string URL
+  window.history.pushState({}, '', urlString);
+
+  // 2. Update React state (which now accepts the object)
+  setCurrentPath(path);
+};
 
   // Listen for browser "Back" button
   useEffect(() => {
@@ -107,7 +119,6 @@ function App() {
           </div>
         </div>
 
-
         {/* --- PAGE CONTENT SWITCHER --- */}
         {/* This nested ternary replaces the black screen issue */}
 
@@ -117,10 +128,9 @@ function App() {
             <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Client</h1>
               <p className="text-xl mb-6">Get the latest version of our software.</p>
-              <button className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+              <button onClick={() => navigate(GetDownloadLink())} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                 Download .exe v1.0
               </button>
-              <br />
               <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
                 Back to Home
               </button>
@@ -395,6 +405,11 @@ function GetExpire() {
   } 
 
 }
+
+function GetDownloadLink() {
+  return "/dashboard"
+}
+
 // Add { loggedIn } inside the parentheses
 function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
   const [license, setLicense] = useState<boolean | null>(null); // null = loading
@@ -478,16 +493,30 @@ function DbCheck() {
   );
 }
 
+
 function Register({ onClose }: { onClose: () => void }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  // 1. Add state for the captcha token and a ref to reset it
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   async function handleSubmit() {
     if (!username || !email || !password) {
       alert("Fill in all fields");
       return;
     }
+
+    // 2. Prevent submission if captcha isn't solved
+    if (!captchaToken) {
+      alert("Please complete the Captcha");
+      return;
+    }
+
     const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    
     const res = await fetch(`${baseUrl}/api/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -495,6 +524,7 @@ function Register({ onClose }: { onClose: () => void }) {
         username,
         email,
         password,
+        captchaToken, // 3. Send the token to your backend
       }),
     });
 
@@ -503,38 +533,64 @@ function Register({ onClose }: { onClose: () => void }) {
       onClose();
     } else {
       alert("Registration failed");
+      // 4. Reset captcha on failure so they can try again
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
     }
-  };
+  }
 
   return (
     <div className='fixed place-self-center inset-0 z-50'>
-      <SpotlightCard className="custom-spotlight-card text-purple-600 w-full font-bold text-2xl lg:text-[35px] md:text-[25px] grid grid-rows-8 gap-[1vw] justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
-        <div className='grid grid-cols-[9fr_1fr] w-[100%]'>
-          <h1 className='justify-self-center'>Register</h1>
-          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="" onClick={onClose} />
+      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[400px] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 p-8 justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
+        <div className='flex justify-between items-center w-full'>
+          <h1 className='text-center flex-grow'>Register</h1>
+          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
         </div>
-        <h1>Username</h1>
-        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="text" value={username}
-          onChange={(e) => setUsername(e.target.value)} />
-        <h1>Email</h1>
-        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="email" value={email}
-          onChange={(e) => setEmail(e.target.value)} />
-        <h1>Password</h1>
-        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400' type="password" value={password}
-          onChange={(e) => setPassword(e.target.value)} />
-        <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200' type="button" value="Submit" onClick={handleSubmit} />
-      </SpotlightCard>
 
-    </div>)
+        <div className="flex flex-col gap-2">
+          <h1 className="text-lg">Username</h1>
+          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+          
+          <h1 className="text-lg">Email</h1>
+          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          
+          <h1 className="text-lg">Password</h1>
+          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+
+        {/* 5. The Captcha Widget */}
+        <div className="flex justify-center my-2">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} // REPLACE THIS with your site key from Google console
+            onChange={(token) => setCaptchaToken(token)}
+            theme="dark" // Matches your purple/dark vibe better
+          />
+        </div>
+
+        <input className='hover:cursor-pointer p-3 border-2 border-purple-600 rounded-lg bg-purple-200 text-purple-900 text-xl' type="button" value="Submit" onClick={handleSubmit} />
+      </SpotlightCard>
+    </div>
+  );
 }
 
 function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: () => void, setAuth: (name: string) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  // 1. Captcha state and Ref
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   async function handleLogin() {
     if (!email || !password) {
       alert("Fill in all fields");
+      return;
+    }
+
+    // 2. Prevent login attempt if captcha isn't checked
+    if (!captchaToken) {
+      alert("Please complete the Captcha");
       return;
     }
 
@@ -543,7 +599,8 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
     const res = await fetch(`${baseUrl}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      // 3. Include captchaToken in the body
+      body: JSON.stringify({ email, password, captchaToken }),
     });
 
     const data = await res.json();
@@ -556,6 +613,9 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
       onClose();
     } else {
       alert(data.error || "Login failed");
+      // 4. Reset captcha on failure
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
     }
   }
 
@@ -570,13 +630,23 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
         <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
         <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        
+        {/* 5. Add the Captcha Widget */}
+        <div className="flex justify-center my-2">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setCaptchaToken(token)}
+            theme="dark"
+          />
+        </div>
+
         <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin} />
         <p className='text-base md:text-xl font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
       </SpotlightCard>
     </div>
   );
 }
-
 function GetImage() {
   const ImagesList = ImageList.images;
   const [imgCount, setImgCount] = useState(0);

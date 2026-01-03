@@ -47,6 +47,10 @@ function authenticateToken(req, res, next) {
   });
 }
 
+app.get('/api/get-link'), authenticateToken, async (req, res) => {
+
+}
+
 // Add authenticateToken here!
 app.get('/api/get-expire', authenticateToken, async (req, res) => {
   try {
@@ -126,34 +130,76 @@ app.get("/api/licence", authenticateToken, async (req, res) => {
 
 // --- 1. REGISTER ROUTE ---
 app.post("/api/users", async (req, res) => {
-  const { username, email, password } = req.body;
+  // Extract data from the request body
+  // Note: We use 'captchaToken' to match your React code
+  const { username, email, password, captchaToken } = req.body;
+
+  // --- STEP 1: CAPTCHA VERIFICATION ---
+  if (!captchaToken) {
+    return res.status(400).json({ message: "Captcha token is missing" });
+  }
 
   try {
-    // Hash the password before saving (Cleanup: standard 10 salt rounds)
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`;
+    
+    const captchaRes = await fetch(verifyUrl, { method: 'POST' });
+    const captchaData = await captchaRes.json();
+
+    if (!captchaData.success) {
+      // If the captcha is invalid, we STOP here and don't touch the DB
+      return res.status(400).json({ message: "Captcha failed. Are you a robot?" });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "Captcha service unavailable" });
+  }
+
+  // --- STEP 2: DATABASE LOGIC ---
+  try {
+    // Hash the password before saving
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // Insert user (license defaults to false in your DB schema)
     await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)",
       [username, email, passwordHash]
     );
 
-    res.json({ success: true });
+    res.json({ success: true, message: "Registered successfully!" });
   } catch (error) {
     console.error("DB Error:", error);
-    // Cleanup: Check for duplicate email error
+    
+    // Check for duplicate email error (Postgres code 23505)
     if (error.code === '23505') {
       return res.status(400).json({ error: "Email already in use" });
     }
+    
     res.status(500).json({ error: "Database error" });
   }
 });
 
 // --- 2. LOGIN ROUTE ---
 app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, captchaToken } = req.body;
+
+  // STEP 1: VERIFY CAPTCHA FIRST
+  if (!captchaToken) {
+    return res.status(400).json({ error: "Captcha verification required" });
+  }
 
   try {
-    // Search for the user by email
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`;
+    const captchaRes = await fetch(verifyUrl, { method: "POST" });
+    const captchaData = await captchaRes.json();
+
+    if (!captchaData.success) {
+      return res.status(401).json({ error: "Captcha failed. Are you a robot?" });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "Security service unavailable" });
+  }
+
+  // STEP 2: PROCEED TO LOGIN LOGIC
+  try {
     const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
 
@@ -161,18 +207,15 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Compare the provided password with the hashed password in the DB
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (isPasswordValid) {
-      // Create a Token that "remembers" the user for 24 hours
       const token = jwt.sign(
         { userId: user.id, username: user.username },
-        JWT_SECRET,
+        process.env.JWT_SECRET,
         { expiresIn: "24h" }
       );
 
-      // Return success along with the token and username for the frontend
       res.json({
         success: true,
         token,
