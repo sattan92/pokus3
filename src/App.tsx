@@ -333,8 +333,9 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                <p>Price for our product is <span className='text-2xl text-bold'>9.99$</span> for a lifetime license.* </p>         
-                <button className='text-black bg-purple-600 rounded-xl p-3 text-3xl '>BUY NOW</button>
+                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>         
+                <button className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
+                <img className='absolute place-self-end md:h-[45%] h-[60%]' src="zlava.png" alt="" />
 
               </SpotlightCard>
             </div>
