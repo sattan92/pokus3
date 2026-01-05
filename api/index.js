@@ -82,38 +82,44 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 // --- 2. SELL.APP WEBHOOK ---
 app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
-    console.log("--- DEBUG: RECEIVED WEBHOOK BODY ---");
-    console.log(JSON.stringify(data, null, 2)); // This shows everything in the console
-    
-    const fieldHash = "f6039d44b29456b20f8f373155ae4973";
+    console.log("--- WEBHOOK RECEIVED ---");
+
     let submittedUsername = "";
 
-    // 1. Try to find the value anywhere inside the additional_information
-    const info = data.additional_information || {};
-    const target = info[fieldHash];
+    // 1. Handle the double-nested array structure
+    if (Array.isArray(data.additional_information)) {
+        // We take the first element (which is the array of fields) and flatten it
+        const flatFields = data.additional_information.flat();
+        
+        // Find the field where the key (or label) is "Username"
+        const userField = flatFields.find(f => 
+            f.key?.toLowerCase() === 'username' || 
+            f.label?.toLowerCase() === 'username'
+        );
 
-    if (typeof target === 'string') {
-        submittedUsername = target;
-    } else if (target && typeof target === 'object') {
-        // Dig into common Sell.app/Livewire object paths
-        submittedUsername = target.value || target.data || target.label || Object.values(target)[0];
-    } else {
-        // LAST RESORT: Just grab the first string found in additional_information
-        const allValues = Object.values(info);
-        submittedUsername = allValues.find(v => typeof v === 'string') || 
-                            allValues.find(v => v && v.value)?.value;
+        if (userField) {
+            submittedUsername = userField.value;
+        }
     }
 
-    if (!submittedUsername || typeof submittedUsername === 'object') {
-        console.error("❌ Still failed to find username. Check the DEBUG log above.");
-        return res.status(400).send("Invalid username");
+    // 2. Fallback: If it's not an array, try the old object method
+    if (!submittedUsername && typeof data.additional_information === 'object') {
+        submittedUsername = data.additional_information["Username"] || 
+                            data.additional_information["username"];
+    }
+
+    // 3. Validation & Cleanup
+    if (!submittedUsername) {
+        console.error("❌ Could not find Username in the nested array.");
+        return res.status(400).send("Username missing");
     }
 
     const finalUser = String(submittedUsername).trim().toLowerCase();
-    console.log(`💰 SUCCESS: Processing payment for: ${finalUser}`);
+    console.log(`💰 SUCCESS: Payment confirmed for user: ${finalUser}`);
 
-    // ... Your DB UPDATE code here ...
-    
+    // --- YOUR DATABASE CODE HERE ---
+    // Example: await pool.query('UPDATE users SET status = "Active" WHERE username = $1', [finalUser]);
+
     res.sendStatus(200);
 });
 
