@@ -80,38 +80,20 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 });
 
 // --- 2. SELL.APP WEBHOOK ---
-app.post("/api/webhooks/sellapp", async (req, res) => {
-  try {
-    const { event, data } = req.body;
-
-    // Only trigger on completed payments
-    if (event !== 'order.completed') return res.status(200).send("Ignored");
-
-    let targetUser = null;
-
-    // Sell.app sends custom fields in the 'additional_information' or 'custom_fields' array
-    const fields = data.custom_fields || data.additional_information || [];
-
-    // We loop through the fields to find the one named "Username"
-    if (Array.isArray(fields)) {
-      const field = fields.find(f => f.label.toLowerCase() === 'username');
-      if (field) targetUser = field.value;
-    }
-
-    if (!targetUser) {
-      console.error("No username found in payment data");
-      return res.status(400).send("Missing Username");
-    }
-
-    // UPDATE DATABASE: Set license to true
-    await db.query('UPDATE users SET license = $1 WHERE username = $2', [true, targetUser]);
+app.post('/api/webhooks/sellapp', async (req, res) => {
+    const data = req.body;
     
-    console.log(`License activated for ${targetUser}`);
-    res.status(200).send("Success");
-  } catch (err) {
-    console.error("Webhook error:", err);
-    res.status(500).send("Internal Error");
-  }
+    // Sell.app sends custom fields in a few different places
+    const info = data.additional_information || data.custom_fields || {};
+    
+    // This finds the first value in the object, regardless of the long hash key
+    const username = Object.values(info)[0]; 
+
+    if (username) {
+        console.log(`Received payment for user: ${username}`);
+        // Update database here
+    }
+    res.sendStatus(200);
 });
 
 // 3. LICENSE CHECK
