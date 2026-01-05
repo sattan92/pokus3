@@ -61,11 +61,11 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
   }
 
   // 1. Enter the ID found at the end of your product link (e.g., sell.app/p/AbCd12)
-  const productID = "lifetime-license"; 
+  const productID = "343375"; 
   
   // 2. Pre-fill the custom field. 
   // If you named your field "Username" in Sell.app, use [Username]
-  const checkoutUrl = `https://sell.app/p/${productID}?custom_fields[Username]=${userName}`;
+  const checkoutUrl = `https://sell.app/p/${productID}?custom_fields[username]=${userName}`;
 
   window.location.href = checkoutUrl;
 };
