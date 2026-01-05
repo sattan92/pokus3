@@ -84,34 +84,33 @@ app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
     const fieldHash = "f6039d44b29456b20f8f373155ae4973";
     
-    // 1. Get the raw value from the webhook
-    let rawValue = 
-        data.additional_information?.[fieldHash] || 
-        data.custom_fields?.[fieldHash] ||
-        (data.additional_information && Object.values(data.additional_information)[0]);
+    // 1. Get the raw value
+    let rawValue = data.additional_information?.[fieldHash] || 
+                   data.custom_fields?.[fieldHash];
 
-    // 2. Safe extraction (handles objects or strings)
+    // 2. Debug: See what the object actually looks like in your logs
+    console.log("Raw field data:", JSON.stringify(rawValue));
+
     let submittedUsername = "";
-    
+
+    // 3. Extract the string properly
     if (typeof rawValue === 'string') {
         submittedUsername = rawValue;
-    } else if (typeof rawValue === 'object' && rawValue !== null) {
-        // If Sell.app sent an object like { value: "admin2" }, get the value
-        submittedUsername = rawValue.value || rawValue.name || Object.values(rawValue)[0] || "";
+    } else if (rawValue && typeof rawValue === 'object') {
+        // If it's an object, Sell.app usually puts the text in 'value' or 'data'
+        submittedUsername = rawValue.value || rawValue.data || Object.values(rawValue)[0];
     }
 
-    // 3. Now we can safely trim and lowercase
-    if (!submittedUsername || String(submittedUsername).length === 0) {
-        console.error("❌ No username could be extracted from:", rawValue);
-        return res.status(400).send("No username provided");
+    // 4. Final check and cleanup
+    if (!submittedUsername || typeof submittedUsername === 'object') {
+        console.error("❌ Failed to turn object into string. Still got:", submittedUsername);
+        return res.status(400).send("Invalid username format");
     }
 
     const finalUser = String(submittedUsername).trim().toLowerCase();
-
     console.log(`💰 Payment confirmed for: ${finalUser}`);
-    
-    // ... Continue with your database update logic ...
-    // try { await pool.query('UPDATE users SET ...') } catch ...
+
+    // ... Your SQL Update Code ...
     
     res.sendStatus(200);
 });
