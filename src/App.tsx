@@ -53,23 +53,17 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
     }
   } 
 
-    const handleSellAppBuy = () => {
-  if (!isLoggedIn) {
-    alert("Please log in to purchase.");
-    handleOpenLogin();
-    return;
-  }
+    // App.tsx
+const handleSellAppBuy = () => {
+  // ... check login logic ...
 
-  // 1. Enter the ID found at the end of your product link (e.g., sell.app/p/AbCd12)
   const productID = "343375"; 
   
-  // 2. Pre-fill the custom field. 
-  // If you named your field "Username" in Sell.app, use [Username]
-  const checkoutUrl = `https://sell.app/p/${productID}?custom_fields[username]=${userName}`;
+  // Try using your subdomain instead of the global sell.app domain
+  const checkoutUrl = `https://sattanshop.sell.app/checkout/${productID}?custom_fields[Username]=${userName}`;
 
   window.location.href = checkoutUrl;
 };
-
 
 const requestDownload = async () => {
   const token = localStorage.getItem('token');
