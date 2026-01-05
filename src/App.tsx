@@ -55,13 +55,14 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
 
     // App.tsx
 const handleSellAppBuy = () => {
-  // ... check login logic ...
+  // ... existing login check ...
 
   const productID = "343375"; 
   
-  // Try using your subdomain instead of the global sell.app domain
+  // Try this specific checkout path on your subdomain
   const checkoutUrl = `https://sattanshop.sell.app/checkout/${productID}?custom_fields[Username]=${userName}`;
 
+  console.log("Redirecting to:", checkoutUrl);
   window.location.href = checkoutUrl;
 };
 
