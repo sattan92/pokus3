@@ -53,6 +53,22 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
     }
   } 
 
+  const handleDigisellerBuy = () => {
+  if (!isLoggedIn) {
+    alert("Please log in to purchase.");
+    handleOpenLogin();
+    return;
+  }
+
+  // Your Digiseller Product ID
+  const productId = "YOUR_PRODUCT_ID"; 
+  
+  // We pass the username as a 'custom' field so we know who to upgrade later
+  // Digiseller allows passing additional parameters (e.g., info=username)
+  const purchaseUrl = `https://www.digiseller.market/asp/pay_wm.asp?id_d=${productId}&info=${userName}`;
+
+  window.location.href = purchaseUrl;
+};
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
@@ -144,6 +160,28 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
             </SpotlightCard>
           </div>
 
+        ) : currentPath === '/tos' ? (
+        <>
+        <div>
+          <SpotlightCard>
+          <span className='text-purple-600'>
+            <h1>Terms of Service Last Updated: January 2026</h1>
+
+<br />Welcome to sattanshop. By accessing our website and using our software, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you are prohibited from using our services.
+<br />Merchant of Record Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.
+
+<br />License Grant Upon purchase, we grant you a personal, non-exclusive, non-transferable license to use the Minecraft utility software. This software is intended for personal use only. You may not decompile, reverse engineer, or attempt to derive the source code of the software.
+
+<br />Payments and Refunds All payments are handled securely by Paddle. Due to the digital nature of our products, refunds are generally handled on a case-by-case basis through Paddle’s support. Once a digital product has been downloaded or accessed, the right of withdrawal may be forfeited as per local consumer laws.
+
+<br />Intellectual Property All software, graphics, and branding on this site are the property of sattanshop,vercel.app. You may not use our trademarks or copyrighted materials without express written consent.
+
+<br />Limitation of Liability The software is provided "as is" without warranty of any kind. We are not responsible for any damages to your computer system, loss of data, or game account restrictions that may result from the use of our software.
+
+<br />Contact Information For any support or legal inquiries, please contact us at: [Your Support Email].
+          </span></SpotlightCard>
+        </div>
+        </>
         ) : currentPath === '/clients' ? (
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
@@ -334,7 +372,7 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
                 <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>         
-                <button className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
+                <button onClick={handleDigisellerBuy} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
                 <img className='absolute place-self-end md:h-[45%] h-[60%]' src="zlava.png" alt="" />
 
               </SpotlightCard>
@@ -342,7 +380,8 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
 
             <div className="p-[2vw]">
               <SpotlightCard className="no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
-                <div className='h-full'><GetImage /></div>
+                <div className='h-full'><GetImage /><p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p></div>
+                
               </SpotlightCard>
             </div>
           </>
@@ -582,6 +621,9 @@ function Register({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+
+
+
 
 function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: () => void, setAuth: (name: string) => void }) {
   const [email, setEmail] = useState("");

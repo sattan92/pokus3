@@ -51,6 +51,38 @@ app.get('/api/get-link'), authenticateToken, async (req, res) => {
 
 }
 
+// Add this route to your index.js
+app.post("/api/webhooks/digiseller", async (req, res) => {
+  const { 
+    id_d,        // Product ID
+    uniquecode,  // Unique payment code
+    info,        // This is the 'userName' we passed in the URL!
+    amount       // Payment amount
+  } = req.body;
+
+  try {
+    // 1. (Optional but Recommended) Verify the payment with Digiseller API 
+    // to ensure this isn't a fake request.
+
+    // 2. Update the user's license in your DB
+    // We use 'info' because we stored the username there in the frontend link
+    const queryText = 'UPDATE users SET license = $1 WHERE username = $2';
+    const result = await db.query(queryText, [true, info]);
+
+    if (result.rowCount > 0) {
+      console.log(`License activated for ${info}`);
+      // Digiseller expects a 'YES' or a specific string to confirm receipt
+      res.send("YES"); 
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (err) {
+    console.error("Digiseller Webhook Error:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 // Add authenticateToken here!
 app.get('/api/get-expire', authenticateToken, async (req, res) => {
   try {
