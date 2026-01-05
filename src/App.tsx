@@ -160,10 +160,42 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
             </SpotlightCard>
           </div>
 
+        ) : currentPath === '/ref' ? (<>
+        <div>
+          <SpotlightCard className='m-[2vw]'>
+          <span className='text-purple-500'>
+            Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
+          </span></SpotlightCard>
+        </div>
+        </>) : currentPath === '/pp' ? (
+          <>
+          <div>
+            <SpotlightCard className='m-[2vw]'>
+            <span className='text-purple-500'>
+              <h1>Privacy Policy Last Updated: January 2026</h1>
+<br />
+1. Data Collection We collect minimal data necessary to provide our service. This includes your email address (for delivery) and IP address (for fraud prevention).
+<br />
+2. Payment Processing We do not store or see your credit card information. All payments are processed by Paddle.com. You can view their privacy policy at paddle.com/legal.
+<br />
+3. Use of Data Your data is used strictly for:
+
+Delivering the software link to your email.
+
+Preventing unauthorized access to our services.
+
+Providing technical support.
+<br />
+4. Cookies We may use basic cookies to remember your session or preferences. You can disable these in your browser settings.
+<br />
+5. Contact To request data deletion, contact us at danielblasko7@gmail.com.
+            </span></SpotlightCard>
+          </div>
+          </>
         ) : currentPath === '/tos' ? (
         <>
         <div>
-          <SpotlightCard>
+          <SpotlightCard className='m-[2vw]'>
           <span className='text-purple-600'>
             <h1>Terms of Service Last Updated: January 2026</h1>
 
@@ -380,7 +412,7 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
 
             <div className="p-[2vw]">
               <SpotlightCard className="no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
-                <div className='h-full'><GetImage /><p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p></div>
+                <div className='h-full'><GetImage /></div>
                 
               </SpotlightCard>
             </div>
@@ -397,6 +429,11 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
             />
             : <Register onClose={closeModals} />
         )}
+
+        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p> 
+        <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-90 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                  Back to Home
+                </button></SpotlightCard></footer>
       </div>
     </>
   )
