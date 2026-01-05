@@ -55,14 +55,16 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
 
     // App.tsx
 const handleSellAppBuy = () => {
-  // ... existing login check ...
+  if (!isLoggedIn) {
+    alert("Please log in to purchase.");
+    handleOpenLogin();
+    return;
+  }
 
-  const productID = "343375"; 
-  
-  // Try this specific checkout path on your subdomain
-  const checkoutUrl = `https://sattanshop.sell.app/checkout/${productID}?custom_fields[Username]=${userName}`;
+  // Use your working URL structure
+  const baseUrl = "https://sattanshop.sell.app/product/lifetime-license";
+  const checkoutUrl = `${baseUrl}?custom_fields[Username]=${userName}&quantity=1`;
 
-  console.log("Redirecting to:", checkoutUrl);
   window.location.href = checkoutUrl;
 };
 
