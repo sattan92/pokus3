@@ -80,47 +80,57 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 });
 
 // --- 2. SELL.APP WEBHOOK ---
+// ... existing imports like const pool = require('./db') or similar ...
+
 app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
-    console.log("--- WEBHOOK RECEIVED ---");
-
     let submittedUsername = "";
 
-    // 1. Handle the double-nested array structure
+    // 1. Extraction Logic (from our previous step)
     if (Array.isArray(data.additional_information)) {
-        // We take the first element (which is the array of fields) and flatten it
         const flatFields = data.additional_information.flat();
-        
-        // Find the field where the key (or label) is "Username"
         const userField = flatFields.find(f => 
             f.key?.toLowerCase() === 'username' || 
             f.label?.toLowerCase() === 'username'
         );
-
-        if (userField) {
-            submittedUsername = userField.value;
-        }
+        if (userField) submittedUsername = userField.value;
     }
 
-    // 2. Fallback: If it's not an array, try the old object method
-    if (!submittedUsername && typeof data.additional_information === 'object') {
-        submittedUsername = data.additional_information["Username"] || 
-                            data.additional_information["username"];
-    }
-
-    // 3. Validation & Cleanup
     if (!submittedUsername) {
-        console.error("❌ Could not find Username in the nested array.");
+        console.error("❌ No username found in webhook.");
         return res.status(400).send("Username missing");
     }
 
     const finalUser = String(submittedUsername).trim().toLowerCase();
-    console.log(`💰 SUCCESS: Payment confirmed for user: ${finalUser}`);
 
-    // --- YOUR DATABASE CODE HERE ---
-    // Example: await pool.query('UPDATE users SET status = "Active" WHERE username = $1', [finalUser]);
+    try {
+        // 2. The Database Update
+        // We use LOWER(username) to ensure it matches even if they typed "Admin2"
+        const query = `
+            UPDATE users 
+            SET license = true 
+            WHERE LOWER(username) = $1
+            RETURNING *;
+        `;
 
-    res.sendStatus(200);
+        const result = await pool.query(query, [finalUser]);
+
+        // 3. Check if any row was actually changed
+        if (result.rowCount === 0) {
+            console.error(`⚠️ Payment received, but user "${finalUser}" does not exist in the database.`);
+            // You might want to log this in a "Manual Review" table
+            return res.status(404).send("User not found");
+        }
+
+        console.log(`✅ SUCCESS: License activated for ${finalUser}`);
+        
+        // 4. Send success back to Sell.app
+        res.status(200).send("Webhook Processed and License Activated");
+
+    } catch (err) {
+        console.error("❌ Database Error during webhook:", err);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 // 4. DB HEALTH CHECK
