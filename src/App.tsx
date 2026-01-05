@@ -178,7 +178,7 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
 
 <br />Limitation of Liability The software is provided "as is" without warranty of any kind. We are not responsible for any damages to your computer system, loss of data, or game account restrictions that may result from the use of our software.
 
-<br />Contact Information For any support or legal inquiries, please contact us at: [Your Support Email].
+<br />Contact Information For any support or legal inquiries, please contact us at: danielblasko7@gmail.com.
           </span></SpotlightCard>
         </div>
         </>
