@@ -82,35 +82,37 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 // --- 2. SELL.APP WEBHOOK ---
 app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
-    const fieldHash = "f6039d44b29456b20f8f373155ae4973";
+    console.log("--- DEBUG: RECEIVED WEBHOOK BODY ---");
+    console.log(JSON.stringify(data, null, 2)); // This shows everything in the console
     
-    // 1. Get the raw value
-    let rawValue = data.additional_information?.[fieldHash] || 
-                   data.custom_fields?.[fieldHash];
-
-    // 2. Debug: See what the object actually looks like in your logs
-    console.log("Raw field data:", JSON.stringify(rawValue));
-
+    const fieldHash = "f6039d44b29456b20f8f373155ae4973";
     let submittedUsername = "";
 
-    // 3. Extract the string properly
-    if (typeof rawValue === 'string') {
-        submittedUsername = rawValue;
-    } else if (rawValue && typeof rawValue === 'object') {
-        // If it's an object, Sell.app usually puts the text in 'value' or 'data'
-        submittedUsername = rawValue.value || rawValue.data || Object.values(rawValue)[0];
+    // 1. Try to find the value anywhere inside the additional_information
+    const info = data.additional_information || {};
+    const target = info[fieldHash];
+
+    if (typeof target === 'string') {
+        submittedUsername = target;
+    } else if (target && typeof target === 'object') {
+        // Dig into common Sell.app/Livewire object paths
+        submittedUsername = target.value || target.data || target.label || Object.values(target)[0];
+    } else {
+        // LAST RESORT: Just grab the first string found in additional_information
+        const allValues = Object.values(info);
+        submittedUsername = allValues.find(v => typeof v === 'string') || 
+                            allValues.find(v => v && v.value)?.value;
     }
 
-    // 4. Final check and cleanup
     if (!submittedUsername || typeof submittedUsername === 'object') {
-        console.error("❌ Failed to turn object into string. Still got:", submittedUsername);
-        return res.status(400).send("Invalid username format");
+        console.error("❌ Still failed to find username. Check the DEBUG log above.");
+        return res.status(400).send("Invalid username");
     }
 
     const finalUser = String(submittedUsername).trim().toLowerCase();
-    console.log(`💰 Payment confirmed for: ${finalUser}`);
+    console.log(`💰 SUCCESS: Processing payment for: ${finalUser}`);
 
-    // ... Your SQL Update Code ...
+    // ... Your DB UPDATE code here ...
     
     res.sendStatus(200);
 });
