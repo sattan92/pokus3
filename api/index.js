@@ -190,5 +190,13 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.listen(3001, () => { console.log("Server running on 3001"); });
+// Remove your old app.listen and replace it with this:
+
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = 3001;
+    app.listen(PORT, () => {
+        console.log(`Server running locally on http://localhost:${PORT}`);
+    });
+}
+
 export default app;
