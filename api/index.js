@@ -82,28 +82,38 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 // --- 2. SELL.APP WEBHOOK ---
 app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
-    
-    // Sell.app usually sends the hash ID you found earlier
     const fieldHash = "f6039d44b29456b20f8f373155ae4973";
     
-    // Check multiple places where the username might be hiding
-    let submittedUsername = 
+    // 1. Get the raw value from the webhook
+    let rawValue = 
         data.additional_information?.[fieldHash] || 
         data.custom_fields?.[fieldHash] ||
         (data.additional_information && Object.values(data.additional_information)[0]);
 
-    if (!submittedUsername) {
-        console.error("❌ No username found in webhook data!");
+    // 2. Safe extraction (handles objects or strings)
+    let submittedUsername = "";
+    
+    if (typeof rawValue === 'string') {
+        submittedUsername = rawValue;
+    } else if (typeof rawValue === 'object' && rawValue !== null) {
+        // If Sell.app sent an object like { value: "admin2" }, get the value
+        submittedUsername = rawValue.value || rawValue.name || Object.values(rawValue)[0] || "";
+    }
+
+    // 3. Now we can safely trim and lowercase
+    if (!submittedUsername || String(submittedUsername).length === 0) {
+        console.error("❌ No username could be extracted from:", rawValue);
         return res.status(400).send("No username provided");
     }
 
-    // Convert to lowercase to match your database login logic
-    const finalUser = submittedUsername.trim().toLowerCase();
+    const finalUser = String(submittedUsername).trim().toLowerCase();
 
-    console.log(`💰 Payment received for: ${finalUser}`);
+    console.log(`💰 Payment confirmed for: ${finalUser}`);
     
-    // Update the database (ensure your SQL query uses lowercase comparison)
-    // UPDATE users SET license_status = 'Active' WHERE LOWER(username) = $1
+    // ... Continue with your database update logic ...
+    // try { await pool.query('UPDATE users SET ...') } catch ...
+    
+    res.sendStatus(200);
 });
 
 // 4. DB HEALTH CHECK
