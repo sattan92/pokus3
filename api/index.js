@@ -1,238 +1,187 @@
 import express from "express";
 import pkg from "pg";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"; // Added for login sessions
+import jwt from "jsonwebtoken";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 const { Pool } = pkg;
 
 const app = express();
+
+// 1. MUST BE BEFORE express.json() to handle raw bodies if needed later, 
+// but for Sell.app JSON is fine. 
 app.use(express.json());
 app.use(cors());
 
-// Use a secret key for signing tokens (Stored in .env)
-const JWT_SECRET = process.env.JWT_SECRET || "apsoijdoaisjdoiaJsoidjaoisjdoijasoidjoaisjd";
-
+const JWT_SECRET = process.env.JWT_SECRET || "change_this_to_something_secure";
 const isProduction = process.env.NODE_ENV === "production";
 
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: isProduction
-    ? { rejectUnauthorized: false }
-    : false
+  ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
-// 2. Setup the tracking variables (Global scope)
-let lastCheckTime = 0;
-let lastStatus = false;
-const COOLDOWN_MS = 60000;
-
-// --- AUTHENTICATION MIDDLEWARE ---
-// This acts as the "Bouncer". It checks the token before letting the user in.
+// --- AUTH MIDDLEWARE ---
 function authenticateToken(req, res, next) {
-  // 1. Get the token from the headers (Frontend sends: "Bearer <token>")
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Get just the token part
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.sendStatus(401);
 
-  if (!token) return res.sendStatus(401); // No token? Kick them out (Unauthorized)
-
-  // 2. Verify the token using your secret key
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403); // Invalid token? Forbidden.
-
-    // 3. Attach the user info to the request so the route can see it
-    req.user = user; 
-    next(); // Pass control to the next function (your route)
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
   });
 }
 
-app.get('/api/get-link'), authenticateToken, async (req, res) => {
+// --- ROUTES ---
 
-}
-
-
-
-
-// Add authenticateToken here!
-app.get('/api/get-expire', authenticateToken, async (req, res) => {
+app.get('/api/get-link', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.userId; 
-    const queryText = 'SELECT expire FROM users WHERE id = $1';
-    const result = await db.query(queryText, [userId]);
+    const userId = req.user.userId;
 
-    // Safety Check: Did we find the user?
-    if (result.rows.length === 0) {
-      return res.status(404).json({ status: "error", message: "User not found" });
-    }
+    // Check if user has a license in Postgres
+    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
 
-    const resultValue = result.rows[0].expire;
-    
-    if (resultValue === "never"){
-      res.json({status: "never"})
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+
+    if (result.rows[0].license === true) {
+      // SUCCESS: Send the real link
+      res.json({ url: "https://your-backblaze-link-here.com/file.exe" });
     } else {
-      res.json({status: "none"})
+      // FAIL: Deny access
+      res.status(403).json({ error: "You must purchase a license first." });
     }
   } catch (err) {
-    console.error("Backend Error:", err);
-    res.status(500).json({status: "error"})
-  }
-})
-
-// 3. The Route (Now it can 'see' everything above it)
-app.get('/api/db-check', async (req, res) => {
-  const now = Date.now();
-  
-  if (now - lastCheckTime < COOLDOWN_MS) {
-    return res.status(429).json({
-      connected: lastStatus,
-      message: "Cooldown active. Sending cached status."
-    });
-  }
-
-  try {
-    // Using the pool we defined above
-    await db.query('SELECT 1');
-    lastStatus = true;
-    lastCheckTime = now;
-    res.json({ connected: true });
-  } catch (err) {
-    lastStatus = false;
-    // This resets the timer even on failure so they can't spam the error log either
-    lastCheckTime = now;
-    console.error("DATABASE HEALTH CHECK FAILED:", err.message);
-    res.status(500).json({ connected: false, error: err.message });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Note the addition of 'authenticateToken' as the second argument here!
-app.get("/api/licence", authenticateToken, async (req, res) => {
+
+// --- 1. SECURE DOWNLOAD ROUTE ---
+app.get('/api/get-download-link', authenticateToken, async (req, res) => {
   try {
-    // BUG FIX: Your token payload uses 'userId', not 'id'
-    const userId = req.user.userId; 
+    const userId = req.user.userId;
     
-    console.log("Fetching license for User ID:", userId); // Debug log
+    // Check if user has paid
+    const user = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+    
+    if (user.rows[0]?.license) {
+      // SUCCESS: User has license = true
+      return res.json({ url: "https://docs.google.com/your-private-link" });
+    } else {
+      // FAIL: User hasn't paid
+      return res.status(403).json({ error: "License required to access this link." });
+    }
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
 
-    const queryText = 'SELECT license FROM users WHERE id = $1';
-    const result = await db.query(queryText, [userId]);
+// --- 2. SELL.APP WEBHOOK ---
+app.post("/api/webhooks/sellapp", async (req, res) => {
+  try {
+    const { event, data } = req.body;
 
-    // BUG FIX: Fixed typo 'lenght' -> 'length'
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "User not found" });
+    // Only trigger on completed payments
+    if (event !== 'order.completed') return res.status(200).send("Ignored");
+
+    let targetUser = null;
+
+    // Sell.app sends custom fields in the 'additional_information' or 'custom_fields' array
+    const fields = data.custom_fields || data.additional_information || [];
+
+    // We loop through the fields to find the one named "Username"
+    if (Array.isArray(fields)) {
+      const field = fields.find(f => f.label.toLowerCase() === 'username');
+      if (field) targetUser = field.value;
     }
 
-    res.json({
-      status: result.rows[0].license
-    });
+    if (!targetUser) {
+      console.error("No username found in payment data");
+      return res.status(400).send("Missing Username");
+    }
+
+    // UPDATE DATABASE: Set license to true
+    await db.query('UPDATE users SET license = $1 WHERE username = $2', [true, targetUser]);
     
+    console.log(`License activated for ${targetUser}`);
+    res.status(200).send("Success");
   } catch (err) {
-    console.error("License Route Error:", err.message);
+    console.error("Webhook error:", err);
+    res.status(500).send("Internal Error");
+  }
+});
+
+// 3. LICENSE CHECK
+app.get("/api/licence", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+    res.json({ status: result.rows[0].license });
+  } catch (err) {
     res.status(500).json({ error: "Database error" });
   }
 });
 
-// --- 1. REGISTER ROUTE ---
-app.post("/api/users", async (req, res) => {
-  // Extract data from the request body
-  // Note: We use 'captchaToken' to match your React code
-  const { username, email, password, captchaToken } = req.body;
-
-  // --- STEP 1: CAPTCHA VERIFICATION ---
-  if (!captchaToken) {
-    return res.status(400).json({ message: "Captcha token is missing" });
+// 4. DB HEALTH CHECK
+app.get('/api/db-check', async (req, res) => {
+  try {
+    await db.query('SELECT 1');
+    res.json({ connected: true });
+  } catch (err) {
+    res.status(500).json({ connected: false });
   }
+});
+
+// 5. REGISTER
+app.post("/api/users", async (req, res) => {
+  const { username, email, password, captchaToken } = req.body;
+  if (!captchaToken) return res.status(400).json({ message: "Captcha missing" });
 
   try {
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`;
-    
     const captchaRes = await fetch(verifyUrl, { method: 'POST' });
     const captchaData = await captchaRes.json();
+    if (!captchaData.success) return res.status(400).json({ message: "Captcha failed" });
 
-    if (!captchaData.success) {
-      // If the captcha is invalid, we STOP here and don't touch the DB
-      return res.status(400).json({ message: "Captcha failed. Are you a robot?" });
-    }
-  } catch (err) {
-    return res.status(500).json({ error: "Captcha service unavailable" });
-  }
-
-  // --- STEP 2: DATABASE LOGIC ---
-  try {
-    // Hash the password before saving
     const passwordHash = await bcrypt.hash(password, 10);
-
-    // Insert user (license defaults to false in your DB schema)
-    await db.query(
-      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)",
-      [username, email, passwordHash]
-    );
-
-    res.json({ success: true, message: "Registered successfully!" });
+    await db.query("INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)", [username, email, passwordHash]);
+    res.json({ success: true });
   } catch (error) {
-    console.error("DB Error:", error);
-    
-    // Check for duplicate email error (Postgres code 23505)
-    if (error.code === '23505') {
-      return res.status(400).json({ error: "Email already in use" });
-    }
-    
+    if (error.code === '23505') return res.status(400).json({ error: "Email/Username taken" });
     res.status(500).json({ error: "Database error" });
   }
 });
 
-// --- 2. LOGIN ROUTE ---
+// 6. LOGIN
 app.post("/api/login", async (req, res) => {
   const { email, password, captchaToken } = req.body;
-
-  // STEP 1: VERIFY CAPTCHA FIRST
-  if (!captchaToken) {
-    return res.status(400).json({ error: "Captcha verification required" });
-  }
+  if (!captchaToken) return res.status(400).json({ error: "Captcha missing" });
 
   try {
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`;
     const captchaRes = await fetch(verifyUrl, { method: "POST" });
     const captchaData = await captchaRes.json();
+    if (!captchaData.success) return res.status(401).json({ error: "Captcha failed" });
 
-    if (!captchaData.success) {
-      return res.status(401).json({ error: "Captcha failed. Are you a robot?" });
-    }
-  } catch (err) {
-    return res.status(500).json({ error: "Security service unavailable" });
-  }
-
-  // STEP 2: PROCEED TO LOGIN LOGIC
-  try {
     const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-    if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-
-    if (isPasswordValid) {
-      const token = jwt.sign(
-        { userId: user.id, username: user.username },
-        process.env.JWT_SECRET,
-        { expiresIn: "24h" }
-      );
-
-      res.json({
-        success: true,
-        token,
-        username: user.username
-      });
+    const valid = await bcrypt.compare(password, user.password_hash);
+    if (valid) {
+      const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, { expiresIn: "24h" });
+      res.json({ success: true, token, username: user.username });
     } else {
-      res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid credentials" });
     }
   } catch (error) {
-    console.error("Login Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-app.listen(3001, () => { console.log("Server on 3001"); });
-
+app.listen(3001, () => { console.log("Server running on 3001"); });
 export default app;

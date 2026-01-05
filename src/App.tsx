@@ -53,6 +53,44 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
     }
   } 
 
+    const handleSellAppBuy = () => {
+  if (!isLoggedIn) {
+    alert("Please log in to purchase.");
+    handleOpenLogin();
+    return;
+  }
+
+  // 1. Enter the ID found at the end of your product link (e.g., sell.app/p/AbCd12)
+  const productID = "lifetime-license"; 
+  
+  // 2. Pre-fill the custom field. 
+  // If you named your field "Username" in Sell.app, use [Username]
+  const checkoutUrl = `https://sell.app/p/${productID}?custom_fields[Username]=${userName}`;
+
+  window.location.href = checkoutUrl;
+};
+
+
+const requestDownload = async () => {
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch('/api/get-download-link', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Open the Google Doc / Backblaze link
+      window.open(data.url, '_blank');
+    } else {
+      alert("You need a license to download this.");
+    }
+  } catch (err) {
+    alert("An error occurred. Are you logged in?");
+  }
+};
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
@@ -135,7 +173,7 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
             <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
               <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Client</h1>
               <p className="text-xl mb-6">Get the latest version of our software.</p>
-              <button onClick={() => navigate(GetDownloadLink())} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+              <button onClick={requestDownload} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                 Download .exe v1.0
               </button>
               <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
@@ -388,7 +426,7 @@ Providing technical support.
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
                 <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>         
-                <button className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
+                <button onClick={handleSellAppBuy} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
                 <img className='absolute place-self-end md:h-[45%] h-[60%]' src="zlava.png" alt="" />
 
               </SpotlightCard>
@@ -475,9 +513,6 @@ function GetExpire() {
 }
 
 
-function GetDownloadLink() {
-  return "/dashboard"
-}
 
 // Add { loggedIn } inside the parentheses
 function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
