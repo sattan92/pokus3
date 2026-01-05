@@ -61,10 +61,11 @@ const handleSellAppBuy = () => {
     return;
   }
 
-  // Use your working URL structure
-  const baseUrl = "https://sattanshop.sell.app/product/lifetime-license";
-  const checkoutUrl = `${baseUrl}?custom_fields[Username]=${userName}&quantity=1`;
+  // 1. Alert the user so they don't miss the step
+  alert(`Important: On the next page, please enter your username "${userName}" in the box provided so your license can be activated!`);
 
+  // 2. Redirect to the main product page since pre-fill is failing
+  const checkoutUrl = "https://sattanshop.sell.app/product/lifetime-license";
   window.location.href = checkoutUrl;
 };
 

@@ -83,29 +83,27 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 app.post('/api/webhooks/sellapp', async (req, res) => {
     const data = req.body;
     
-    // Sell.app sends custom fields in a few different places
-    const info = data.additional_information || data.custom_fields || {};
+    // Sell.app usually sends the hash ID you found earlier
+    const fieldHash = "f6039d44b29456b20f8f373155ae4973";
     
-    // This finds the first value in the object, regardless of the long hash key
-    const username = Object.values(info)[0]; 
+    // Check multiple places where the username might be hiding
+    let submittedUsername = 
+        data.additional_information?.[fieldHash] || 
+        data.custom_fields?.[fieldHash] ||
+        (data.additional_information && Object.values(data.additional_information)[0]);
 
-    if (username) {
-        console.log(`Received payment for user: ${username}`);
-        // Update database here
+    if (!submittedUsername) {
+        console.error("❌ No username found in webhook data!");
+        return res.status(400).send("No username provided");
     }
-    res.sendStatus(200);
-});
 
-// 3. LICENSE CHECK
-app.get("/api/licence", authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId;
-    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
-    res.json({ status: result.rows[0].license });
-  } catch (err) {
-    res.status(500).json({ error: "Database error" });
-  }
+    // Convert to lowercase to match your database login logic
+    const finalUser = submittedUsername.trim().toLowerCase();
+
+    console.log(`💰 Payment received for: ${finalUser}`);
+    
+    // Update the database (ensure your SQL query uses lowercase comparison)
+    // UPDATE users SET license_status = 'Active' WHERE LOWER(username) = $1
 });
 
 // 4. DB HEALTH CHECK
