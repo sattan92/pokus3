@@ -22,6 +22,13 @@ const db = new Pool({
   ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false // Required for Vercel to connect to cloud DBs
+  }
+});
+
 // --- AUTH MIDDLEWARE ---
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
