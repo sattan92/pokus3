@@ -102,7 +102,7 @@ app.get('/api/get-link', authenticateToken, async (req, res) => {
       // Generate token for the 'client/' folder
       const response = await b2.getDownloadAuthorization({
         bucketId: process.env.B2_BUCKET_ID,
-        fileNamePrefix: 'client/',
+        fileNamePrefix: '',
         validDurationInSeconds: 3600,
       });
 
