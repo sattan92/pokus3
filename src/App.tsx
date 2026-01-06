@@ -422,12 +422,13 @@ function App() {
                 <p>You will receive acces to our products right after purchase.</p>
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
-                <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
+                
                 {isLoggedIn === true ? (
-                  <div></div>
+                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <span>Thanks for purchasing our product! For downloading head to 'download' section above</span></div>
                 ) : (
-                <div className='grid'>
+                <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
+                  <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
+                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
                 <button onClick={handleSellAppBuy} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
                 <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="" />
                 </div>
@@ -456,9 +457,7 @@ function App() {
         )}
 
         <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
-          <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-90 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
-            Back to Home
-          </button></SpotlightCard></footer>
+          </SpotlightCard></footer>
       </div>
     </>
   )
