@@ -555,7 +555,7 @@ function App() {
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
 
-                {license === true ? (
+                {license ? (
                   <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1><span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span></div>
                 ) : (
                   <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
