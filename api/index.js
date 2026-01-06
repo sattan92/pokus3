@@ -87,41 +87,51 @@ const b2 = new B2({
   applicationKey: process.env.B2_APPLICATION_KEY
 });
 
-app.get('/api/get-link', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId;
 
-    // 1. Check if user has a license in Postgres
-    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+app.get('/api/list-files', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
 
-    if (result.rows[0].license === true) {
-      const authResponse = await b2.authorize();
-      const downloadUrl = authResponse.data.downloadUrl;
+        // 1. License Check
+        const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+        if (result.rows.length === 0 || result.rows[0].license !== true) {
+            return res.status(403).json({ error: "License required" });
+        }
 
-      // Generate token for the 'client/' folder
-      const response = await b2.getDownloadAuthorization({
-        bucketId: process.env.B2_BUCKET_ID,
-        fileNamePrefix: '',
-        validDurationInSeconds: 3600,
-      });
+        // 2. Authorize B2
+        const authData = await b2.authorize();
+        const downloadUrl = authData.data.downloadUrl;
 
-      const authToken = response.data.authorizationToken;
-      const fileName = 'client/file.exe'; // The actual file inside the folder
+        // 3. Get the list of files in the 'client/' folder
+        const listResponse = await b2.listFileNames({
+            bucketId: process.env.B2_BUCKET_ID,
+            prefix: 'client/', // Only look in this folder
+            delimiter: '/',    // Don't go into subfolders
+            maxFileCount: 100
+        });
 
-      // Construct the authenticated URL
-      const finalUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${fileName}?Authorization=${authToken}`;
-      console.log("DEBUG URL:", finalUrl);
-      res.json({ url: finalUrl });
-    } else {
-      res.status(403).json({ error: "You must purchase a license first." });
+        // 4. Generate ONE token that works for the WHOLE folder
+        const tokenResponse = await b2.getDownloadAuthorization({
+            bucketId: process.env.B2_BUCKET_ID,
+            fileNamePrefix: 'client/', // Authorizes any file starting with 'client/'
+            validDurationInSeconds: 3600 // 1 hour
+        });
+
+        const authToken = tokenResponse.data.authorizationToken;
+
+        // 5. Format the data for the frontend
+        const files = listResponse.data.files.map(file => ({
+            name: file.fileName.replace('client/', ''), // "setup.exe" instead of "client/setup.exe"
+            url: `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${file.fileName}?Authorization=${authToken}`
+        }));
+
+        res.json({ files });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
 });
-
 
 // --- 1. SECURE DOWNLOAD ROUTE ---
 app.get('/api/get-download-link', authenticateToken, async (req, res) => {

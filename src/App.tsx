@@ -92,24 +92,53 @@ function App() {
   
   const requestDownloadBack = async () => {
     const token = localStorage.getItem('token');
+    const container = document.getElementById('download-container'); // Ensure you have a div with this ID
 
     try {
-      const response = await fetch('/api/get-link', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+        // Updated to the new endpoint name
+        const response = await fetch('/api/list-files', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        // Open the Google Doc / Backblaze link
-        window.open(data.url, '_blank');
-      } else {
-        alert("You need a license to download this.");
-      }
+        if (response.ok) {
+            // data.files is now an array: [{name: 'file.exe', url: '...'}, ...]
+            if (data.files.length === 0) {
+                alert("The folder is currently empty.");
+                return;
+            }
+
+            // OPTION A: If you just want to open the FIRST file automatically:
+            // window.open(data.files[0].url, '_blank');
+
+            // OPTION B: Render a list of buttons (Recommended)
+            renderFileLinks(data.files);
+            
+        } else {
+            alert(data.error || "You need a license to download this.");
+        }
     } catch (err) {
-      alert("An error occurred. Are you logged in?");
+        alert("An error occurred. Are you logged in?");
+        console.error(err);
     }
-  };
+};
+
+// Helper function to show the files on your page
+const renderFileLinks = (files) => {
+    const container = document.getElementById('download-container'); 
+    if (!container) return;
+
+    container.innerHTML = '<h3>Available Downloads:</h3>';
+    
+    files.forEach(file => {
+        const btn = document.createElement('button');
+        btn.innerText = `Download ${file.name}`;
+        btn.style.margin = "10px";
+        btn.onclick = () => window.open(file.url, '_blank');
+        container.appendChild(btn);
+    });
+};
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
