@@ -187,6 +187,18 @@ function App() {
                 Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
               </span></SpotlightCard>
           </div>
+        </>) : currentPath === '/buy' ? (<>
+          <div>
+            <SpotlightCard className='grid font-bold m-[2vw] text-purple-600'>
+              <div className='grid text-purple-600 mt-4 p-3 md:text-3xl text-xl'>
+                <h1 className=' text-2xl lg:text-[45px] md:text-[35px]'>Payment options</h1>
+                <span className=''>1. Buy via crypto: &nbsp;&nbsp;&nbsp;&nbsp;<button className='text-black bg-purple-600 rounded-xl mt-4 p-3 md:text-3xl text-xl' onClick={handleSellAppBuy}>Click here</button></span>
+                <div className='grid gap-[1vw]'>
+                <span>2. Pay with direct bank transfer. Time to process (0-2days)  (ADD <span className='font-black italic'>!SITE USERNAME!</span> INTO NOTE AND SET THE AMOUNT TO 6.99eur = 8.17usd)</span>
+                <span>&nbsp;&nbsp;IBAN: SK1411000000002971012476</span>
+                <span>&nbsp;&nbsp;Beneficiary name: Daniel Blasko</span></div>
+            </div>  </SpotlightCard>
+          </div>
         </>) : currentPath === '/pp' ? (
           <>
             <div>
@@ -269,7 +281,7 @@ function App() {
                 <li><a href="#ravenb-minus">ravenb-minus</a></li>
                 <li><a href="#sloth">sloth</a></li>
                 <li><a href="#rise">rise</a></li>
-                <li><a href="#thunderhack-deluxe">thunderhack-deluxe</a></li>
+                <li><a href="#thunderhack-deluxe">TH-deluxe</a></li>
                 <li><a href="#vegaline">vegaline</a></li>
                 <li><a href="#virgin">virgin</a></li>
                 <li><a href="#warden">warden</a></li>
@@ -302,7 +314,7 @@ function App() {
                 <p className="md:text-xl text-base">Universal client - setup: 1. Unzip Fabuls, move "client.jar" into "Fabuls/client" folder, run FabulsLauncher.exe (bind - RCTRL)</p>
 
                 <h1 className="mb-3" id='flap-client'>Flap-client</h1>
-                <p className="md:text-xl text-base">1.8.9 hybrid client - !Currently Unavailable due to DMCA takedown!!</p>
+                <p className="md:text-xl text-base">1.8.9 hybrid client - !Currently Unavailable!!</p>
 
                 <h1 className="mb-3" id='francium'>Francium</h1>
                 <p className="md:text-xl text-base">CPVP ghost client (1.20.4 fabric)</p>
@@ -311,13 +323,13 @@ function App() {
                 <p className="md:text-xl text-base">300$ hypixel client (1.8.9 forge!)</p>
 
                 <h1 className="mb-3" id='gothaj'>Gothaj</h1>
-                <p className="md:text-xl text-base">Number 2 intave cheat - setup: 1. put jar into /version 2. start the instance in launcher</p>
+                <p className="md:text-xl text-base">Number 2 intave AC - setup: 1. put jar into /version 2. start the instance in launcher</p>
 
                 <h1 className="mb-3" id='grandline'>Grandline</h1>
                 <p className="md:text-xl text-base">Ghost C/PVP - paid continue of virgin client(1.20.1 fabric)</p>
 
                 <h1 className="mb-3" id='grim'>Grim</h1>
-                <p className="md:text-xl text-base">Ass cheat for lunar - setup 1. run .exe 2. start MC in lunar with fabric(1.16.5 1.20.1/4)</p>
+                <p className="md:text-xl text-base">Ass client for lunar - setup 1. run .exe 2. start MC in lunar with fabric(1.16.5 1.20.1/4)</p>
 
                 <h1 className="mb-3" id='helios'>Helios</h1>
                 <p className="md:text-xl text-base">!!DMA takedown, UNAVAILABLE!</p>
@@ -347,7 +359,7 @@ function App() {
                 <p className="md:text-xl text-base">100$ client (1.20.4 fabric)</p>
 
                 <h1 className="mb-3" id='prestige'>Prestige client</h1>
-                <p className="md:text-xl text-base">Ghost CPVP client DMCA takedown!</p>
+                <p className="md:text-xl text-base">Ghost CPVP client Unavailable!</p>
 
                 <h1 className="mb-3" id='pulse'>Pulse</h1>
                 <p className="md:text-xl text-base">Private blatant CPVP (1.21) (bind: RCTRL)</p>
@@ -361,7 +373,7 @@ function App() {
                 <h1 className="mb-3" id='rise'>Rise</h1>
                 <p className="md:text-xl text-base">FILE NOT AVAILABLE</p>
 
-                <h1 className="mb-3" id='thunderhack-deluxe'>Thunderhack-deluxe</h1>
+                <h1 className="mb-3" id='thunderhack-deluxe'>TH-deluxe</h1>
                 <p className="md:text-xl text-base">Paid version of TH (1.20.1)</p>
 
                 <h1 className="mb-3" id='vegaline'>Vegaline</h1>
@@ -414,24 +426,24 @@ function App() {
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
                 <p>Be on top of the leaderboard.</p>
                 <p>Enjoy clients for every type of gameplay.</p>
-                <p>Right now we have 32 fully functional paid cheats.</p>
+                <p>Right now we have 25 fully functional paid clients.</p>
               </SpotlightCard>
               <SpotlightCard className="no-blur custom-spotlight-card grid " spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>About us</h1>
-                <p>We offer wide variety of cheats for very affordable price.</p>
+                <p>We offer wide variety of clients for very affordable price.</p>
                 <p>You will receive acces to our products right after purchase.</p>
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
-                
+
                 {isLoggedIn === true ? (
-                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <span>Thanks for purchasing our product! For downloading head to 'download' section above</span></div>
+                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1><span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span></div>
                 ) : (
-                <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
-                  <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
-                <button onClick={handleSellAppBuy} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
-                <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="" />
-                </div>
+                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
+                    <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
+                    <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
+                    <button onClick={() => navigate('/buy')} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
+                    <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="" />
+                  </div>
                 )}
               </SpotlightCard>
             </div>
@@ -456,8 +468,8 @@ function App() {
             : <Register onClose={closeModals} />
         )}
 
-        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
-          </SpotlightCard></footer>
+        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
+        </SpotlightCard></footer>
       </div>
     </>
   )
