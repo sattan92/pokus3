@@ -3,9 +3,9 @@ import pkg from "pg";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config';
 const { Pool } = pkg;
+import B2 from 'backblaze-b2';
 
 const app = express();
 
@@ -80,8 +80,6 @@ function authenticateToken(req, res, next) {
 }
 
 // --- ROUTES ---
-
-const B2 = require('backblaze-b2');
 
 // Initialize B2 (Keep these in your .env file!)
 const b2 = new B2({
