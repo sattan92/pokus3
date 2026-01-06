@@ -68,39 +68,61 @@ app.get('/api/get-expire', authenticateToken, async (req, res) => {
 
 // --- AUTH MIDDLEWARE ---
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.sendStatus(401);
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  }
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
 
 // --- ROUTES ---
 
+const B2 = require('backblaze-b2');
+
+// Initialize B2 (Keep these in your .env file!)
+const b2 = new B2({
+  applicationKeyId: process.env.B2_KEY_ID,
+  applicationKey: process.env.B2_APPLICATION_KEY
+});
+
 app.get('/api/get-link', authenticateToken, async (req, res) => {
-    try {
-      const userId = req.user.userId;
+  try {
+    const userId = req.user.userId;
 
-      // Check if user has a license in Postgres
-      const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+    // 1. Check if user has a license in Postgres
+    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
 
-      if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+    if (result.rows[0].license === true) {
+      const authResponse = await b2.authorize();
+      const downloadUrl = authResponse.data.downloadUrl;
 
-      if (result.rows[0].license === true) {
-        // SUCCESS: Send the real link
-        res.json({ url: "https://your-backblaze-link-here.com/file.exe" });
-      } else {
-        // FAIL: Deny access
-        res.status(403).json({ error: "You must purchase a license first." });
-      }
-    } catch (err) {
-      res.status(500).json({ error: "Server error" });
+      // Generate token for the 'client/' folder
+      const response = await b2.getDownloadAuthorization({
+        bucketId: process.env.B2_BUCKET_ID,
+        fileNamePrefix: 'client/',
+        validDurationInSeconds: 3600,
+      });
+
+      const authToken = response.data.authorizationToken;
+      const fileName = 'client/file.exe'; // The actual file inside the folder
+
+      // Construct the authenticated URL
+      const finalUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${fileName}?Authorization=${authToken}`;
+
+      res.json({ url: finalUrl });
+    } else {
+      res.status(403).json({ error: "You must purchase a license first." });
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 
 // --- 1. SECURE DOWNLOAD ROUTE ---
@@ -113,7 +135,7 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 
     if (user.rows[0]?.license) {
       // SUCCESS: User has license = true
-      return res.json({ url: "https://docs.google.com/your-private-link" });
+      return res.json({ url: "https://drive.google.com/drive/folders/1GxRNqULgRVDlAfk-fiQvinurrEjTT_7v?usp=sharing" });
     } else {
       // FAIL: User hasn't paid
       return res.status(403).json({ error: "License required to access this link." });

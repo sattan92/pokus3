@@ -89,6 +89,27 @@ function App() {
       alert("An error occurred. Are you logged in?");
     }
   };
+  
+  const requestDownloadBack = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('/api/get-link', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Open the Google Doc / Backblaze link
+        window.open(data.url, '_blank');
+      } else {
+        alert("You need a license to download this.");
+      }
+    } catch (err) {
+      alert("An error occurred. Are you logged in?");
+    }
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
@@ -169,14 +190,23 @@ function App() {
           // === DOWNLOAD PAGE ===
           <div className="p-[5vw]">
             <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
-              <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Client</h1>
-              <p className="text-xl mb-6">Get the latest version of our software.</p>
-              <button onClick={requestDownload} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
-                Download .exe v1.0
-              </button>
-              <button onClick={() => navigate('/')} className="mt-8 underline text-purple-600 cursor-pointer">
-                Back to Home
-              </button>
+              <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Clients</h1>
+
+              <div>
+                <div className='flex justify-center gap-[5vw]'>
+                  <button onClick={requestDownload} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+                    Download via Google drive
+                  </button>
+                  <button onClick={requestDownloadBack} className="bg-gray-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+                    Download via Backblaze
+                  </button>
+                </div>
+                <div className='flex justify-center'>
+                  <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                    Back to Home
+                  </button>
+                </div>
+              </div>
             </SpotlightCard>
           </div>
 
@@ -194,10 +224,10 @@ function App() {
                 <h1 className=' text-2xl lg:text-[45px] md:text-[35px]'>Payment options</h1>
                 <span className=''>1. Buy via crypto: &nbsp;&nbsp;&nbsp;&nbsp;<button className='text-black bg-purple-600 rounded-xl mt-4 p-3 md:text-3xl text-xl' onClick={handleSellAppBuy}>Click here</button></span>
                 <div className='grid gap-[1vw]'>
-                <span>2. Pay with direct bank transfer. Time to process (0-2days)  (ADD <span className='font-black italic'>!SITE USERNAME!</span> INTO NOTE AND SET THE AMOUNT TO 6.99eur = 8.17usd)</span>
-                <span>&nbsp;&nbsp;IBAN: SK1411000000002971012476</span>
-                <span>&nbsp;&nbsp;Beneficiary name: Daniel Blasko</span></div>
-            </div>  </SpotlightCard>
+                  <span>2. Pay with direct bank transfer. Time to process (0-2days)  (ADD <span className='font-black italic'>!SITE USERNAME!</span> INTO NOTE AND SET THE AMOUNT TO 6.99eur = 8.17usd)</span>
+                  <span>&nbsp;&nbsp;IBAN: SK1411000000002971012476</span>
+                  <span>&nbsp;&nbsp;Beneficiary name: Daniel Blasko</span></div>
+              </div>  </SpotlightCard>
           </div>
         </>) : currentPath === '/pp' ? (
           <>
