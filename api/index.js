@@ -29,51 +29,88 @@ const pool = new Pool({
   }
 });
 
+
+// 3. LICENSE CHECK
+app.get("/api/licence", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+    res.json({ status: result.rows[0].license });
+  } catch (err) {
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+app.get('/api/get-expire', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const queryText = 'SELECT expire FROM users WHERE id = $1';
+  const result = await db.query(queryText, [userId]);
+  // Safety Check: Did we find the user?
+  try {
+
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ status: "error", message: "User not found" });
+    }
+    const resultValue = result.rows[0].expire;
+
+    if (resultValue === "never") {
+      res.json({ status: "never" })
+    } else {
+      res.json({ status: "none" })
+    }
+  } catch (err) {
+    console.error("Backend Error:", err);
+  }
+})
+
+
 // --- AUTH MIDDLEWARE ---
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  }
 
 // --- ROUTES ---
 
 app.get('/api/get-link', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId;
+    try {
+      const userId = req.user.userId;
 
-    // Check if user has a license in Postgres
-    const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
+      // Check if user has a license in Postgres
+      const result = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
 
-    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+      if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
 
-    if (result.rows[0].license === true) {
-      // SUCCESS: Send the real link
-      res.json({ url: "https://your-backblaze-link-here.com/file.exe" });
-    } else {
-      // FAIL: Deny access
-      res.status(403).json({ error: "You must purchase a license first." });
+      if (result.rows[0].license === true) {
+        // SUCCESS: Send the real link
+        res.json({ url: "https://your-backblaze-link-here.com/file.exe" });
+      } else {
+        // FAIL: Deny access
+        res.status(403).json({ error: "You must purchase a license first." });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
     }
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  });
 
 
 // --- 1. SECURE DOWNLOAD ROUTE ---
 app.get('/api/get-download-link', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
-    
+
     // Check if user has paid
     const user = await db.query('SELECT license FROM users WHERE id = $1', [userId]);
-    
+
     if (user.rows[0]?.license) {
       // SUCCESS: User has license = true
       return res.json({ url: "https://docs.google.com/your-private-link" });
@@ -90,54 +127,56 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 // ... existing imports like const pool = require('./db') or similar ...
 
 app.post('/api/webhooks/sellapp', async (req, res) => {
-    const data = req.body;
-    let submittedUsername = "";
+  const data = req.body;
+  let submittedUsername = "";
 
-    // 1. Extraction Logic (from our previous step)
-    if (Array.isArray(data.additional_information)) {
-        const flatFields = data.additional_information.flat();
-        const userField = flatFields.find(f => 
-            f.key?.toLowerCase() === 'username' || 
-            f.label?.toLowerCase() === 'username'
-        );
-        if (userField) submittedUsername = userField.value;
+  // 1. Extraction Logic (from our previous step)
+  if (Array.isArray(data.additional_information)) {
+    const flatFields = data.additional_information.flat();
+    const userField = flatFields.find(f =>
+      f.key?.toLowerCase() === 'username' ||
+      f.label?.toLowerCase() === 'username'
+    );
+    if (userField) submittedUsername = userField.value;
+  }
+
+  if (!submittedUsername) {
+    console.error("❌ No username found in webhook.");
+    return res.status(400).send("Username missing");
+  }
+
+  const finalUser = String(submittedUsername).trim().toLowerCase();
+
+  try {
+    // 2. The Database Update
+    // We use LOWER(username) to ensure it matches even if they typed "Admin2"
+    // Replace your old UPDATE query with this one
+    const query = `
+    UPDATE users 
+    SET license = true, 
+        expire = 'never' 
+    WHERE LOWER(username) = $1
+    RETURNING *;
+`;
+
+    const result = await pool.query(query, [finalUser]);
+
+    // 3. Check if any row was actually changed
+    if (result.rowCount === 0) {
+      console.error(`⚠️ Payment received, but user "${finalUser}" does not exist in the database.`);
+      // You might want to log this in a "Manual Review" table
+      return res.status(404).send("User not found");
     }
 
-    if (!submittedUsername) {
-        console.error("❌ No username found in webhook.");
-        return res.status(400).send("Username missing");
-    }
+    console.log(`✅ SUCCESS: License activated for ${finalUser}`);
 
-    const finalUser = String(submittedUsername).trim().toLowerCase();
+    // 4. Send success back to Sell.app
+    res.status(200).send("Webhook Processed and License Activated");
 
-    try {
-        // 2. The Database Update
-        // We use LOWER(username) to ensure it matches even if they typed "Admin2"
-        const query = `
-            UPDATE users 
-            SET license = true 
-            WHERE LOWER(username) = $1
-            RETURNING *;
-        `;
-
-        const result = await pool.query(query, [finalUser]);
-
-        // 3. Check if any row was actually changed
-        if (result.rowCount === 0) {
-            console.error(`⚠️ Payment received, but user "${finalUser}" does not exist in the database.`);
-            // You might want to log this in a "Manual Review" table
-            return res.status(404).send("User not found");
-        }
-
-        console.log(`✅ SUCCESS: License activated for ${finalUser}`);
-        
-        // 4. Send success back to Sell.app
-        res.status(200).send("Webhook Processed and License Activated");
-
-    } catch (err) {
-        console.error("❌ Database Error during webhook:", err);
-        res.status(500).send("Internal Server Error");
-    }
+  } catch (err) {
+    console.error("❌ Database Error during webhook:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // 4. DB HEALTH CHECK
@@ -200,10 +239,10 @@ app.post("/api/login", async (req, res) => {
 // Remove your old app.listen and replace it with this:
 
 if (process.env.NODE_ENV !== 'production') {
-    const PORT = 3001;
-    app.listen(PORT, () => {
-        console.log(`Server running locally on http://localhost:${PORT}`);
-    });
+  const PORT = 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running locally on http://localhost:${PORT}`);
+  });
 }
 
 export default app;

@@ -21,18 +21,18 @@ interface NavObject {
 
 function App() {
   // --- 1. NEW NAVIGATION STATE (Required for pages) ---
-const [currentPath, setCurrentPath] = useState<string | NavObject>(window.location.pathname);
+  const [currentPath, setCurrentPath] = useState<string | NavObject>(window.location.pathname);
   // Helper to change URL without refreshing
   const navigate = (path: string | NavObject) => {
-  // Determine what the actual URL string is
-  const urlString = typeof path === 'string' ? path : path.url;
+    // Determine what the actual URL string is
+    const urlString = typeof path === 'string' ? path : path.url;
 
-  // 1. Give the browser the string URL
-  window.history.pushState({}, '', urlString);
+    // 1. Give the browser the string URL
+    window.history.pushState({}, '', urlString);
 
-  // 2. Update React state (which now accepts the object)
-  setCurrentPath(path);
-};
+    // 2. Update React state (which now accepts the object)
+    setCurrentPath(path);
+  };
 
   // Listen for browser "Back" button
   useEffect(() => {
@@ -51,44 +51,44 @@ const [currentPath, setCurrentPath] = useState<string | NavObject>(window.locati
     if (isLoggedIn === false) {
       alert("You are not logged in")
     }
-  } 
-
-    // App.tsx
-const handleSellAppBuy = () => {
-  if (!isLoggedIn) {
-    alert("Please log in to purchase.");
-    handleOpenLogin();
-    return;
   }
 
-  // 1. Alert the user so they don't miss the step
-  alert(`Important: On the next page, please enter your username "${userName}" in the box provided so your license can be activated!`);
-
-  // 2. Redirect to the main product page since pre-fill is failing
-  const checkoutUrl = "https://sattanshop.sell.app/product/lifetime-license";
-  window.location.href = checkoutUrl;
-};
-
-const requestDownload = async () => {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const response = await fetch('/api/get-download-link', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    
-    const data = await response.json();
-    
-    if (response.ok) {
-      // Open the Google Doc / Backblaze link
-      window.open(data.url, '_blank');
-    } else {
-      alert("You need a license to download this.");
+  // App.tsx
+  const handleSellAppBuy = () => {
+    if (!isLoggedIn) {
+      alert("Please log in to purchase.");
+      handleOpenLogin();
+      return;
     }
-  } catch (err) {
-    alert("An error occurred. Are you logged in?");
-  }
-};
+
+    // 1. Alert the user so they don't miss the step
+    alert(`Important: On the next page, please enter your username "${userName}" in the box provided so your license can be activated!`);
+
+    // 2. Redirect to the main product page since pre-fill is failing
+    const checkoutUrl = "https://sattanshop.sell.app/product/lifetime-license";
+    window.location.href = checkoutUrl;
+  };
+
+  const requestDownload = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('/api/get-download-link', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Open the Google Doc / Backblaze link
+        window.open(data.url, '_blank');
+      } else {
+        alert("You need a license to download this.");
+      }
+    } catch (err) {
+      alert("An error occurred. Are you logged in?");
+    }
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
@@ -146,9 +146,9 @@ const requestDownload = async () => {
           {/* MIDDLE: Welcome Message + Nav Links (Optional) */}
           <div className="h-full md:p-[0.5vw] md:px-[5vw] p-2 order-2  justify-self-center flex items-center bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl">
             <div className='md:flex md:gap-4'>
-            <h2 className='content-center '>
-              Welcome:</h2>
-            <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
+              <h2 className='content-center '>
+                Welcome:</h2>
+              <p className='text-center'> {isLoggedIn ? userName : "Guest"}</p>
             </div>
           </div>
 
@@ -181,59 +181,59 @@ const requestDownload = async () => {
           </div>
 
         ) : currentPath === '/ref' ? (<>
-        <div>
-          <SpotlightCard className='m-[2vw]'>
-          <span className='text-purple-500'>
-            Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
-          </span></SpotlightCard>
-        </div>
-        </>) : currentPath === '/pp' ? (
-          <>
           <div>
             <SpotlightCard className='m-[2vw]'>
-            <span className='text-purple-500'>
-              <h1>Privacy Policy Last Updated: January 2026</h1>
-<br />
-1. Data Collection We collect minimal data necessary to provide our service. This includes your email address (for delivery) and IP address (for fraud prevention).
-<br />
-2. Payment Processing We do not store or see your credit card information. All payments are processed by Paddle.com. You can view their privacy policy at paddle.com/legal.
-<br />
-3. Use of Data Your data is used strictly for:
-
-Delivering the software link to your email.
-
-Preventing unauthorized access to our services.
-
-Providing technical support.
-<br />
-4. Cookies We may use basic cookies to remember your session or preferences. You can disable these in your browser settings.
-<br />
-5. Contact To request data deletion, contact us at danielblasko7@gmail.com.
-            </span></SpotlightCard>
+              <span className='text-purple-500'>
+                Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
+              </span></SpotlightCard>
           </div>
+        </>) : currentPath === '/pp' ? (
+          <>
+            <div>
+              <SpotlightCard className='m-[2vw]'>
+                <span className='text-purple-500'>
+                  <h1>Privacy Policy Last Updated: January 2026</h1>
+                  <br />
+                  1. Data Collection We collect minimal data necessary to provide our service. This includes your email address (for delivery) and IP address (for fraud prevention).
+                  <br />
+                  2. Payment Processing We do not store or see your credit card information. All payments are processed by Paddle.com. You can view their privacy policy at paddle.com/legal.
+                  <br />
+                  3. Use of Data Your data is used strictly for:
+
+                  Delivering the software link to your email.
+
+                  Preventing unauthorized access to our services.
+
+                  Providing technical support.
+                  <br />
+                  4. Cookies We may use basic cookies to remember your session or preferences. You can disable these in your browser settings.
+                  <br />
+                  5. Contact To request data deletion, contact us at danielblasko7@gmail.com.
+                </span></SpotlightCard>
+            </div>
           </>
         ) : currentPath === '/tos' ? (
-        <>
-        <div>
-          <SpotlightCard className='m-[2vw]'>
-          <span className='text-purple-600'>
-            <h1>Terms of Service Last Updated: January 2026</h1>
+          <>
+            <div>
+              <SpotlightCard className='m-[2vw]'>
+                <span className='text-purple-600'>
+                  <h1>Terms of Service Last Updated: January 2026</h1>
 
-<br />Welcome to sattanshop. By accessing our website and using our software, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you are prohibited from using our services.
-<br />Merchant of Record Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.
+                  <br />Welcome to sattanshop. By accessing our website and using our software, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you are prohibited from using our services.
+                  <br />Merchant of Record Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.
 
-<br />License Grant Upon purchase, we grant you a personal, non-exclusive, non-transferable license to use the Minecraft utility software. This software is intended for personal use only. You may not decompile, reverse engineer, or attempt to derive the source code of the software.
+                  <br />License Grant Upon purchase, we grant you a personal, non-exclusive, non-transferable license to use the Minecraft utility software. This software is intended for personal use only. You may not decompile, reverse engineer, or attempt to derive the source code of the software.
 
-<br />Payments and Refunds All payments are handled securely by Paddle. Due to the digital nature of our products, refunds are generally handled on a case-by-case basis through Paddle’s support. Once a digital product has been downloaded or accessed, the right of withdrawal may be forfeited as per local consumer laws.
+                  <br />Payments and Refunds All payments are handled securely by Paddle. Due to the digital nature of our products, refunds are generally handled on a case-by-case basis through Paddle’s support. Once a digital product has been downloaded or accessed, the right of withdrawal may be forfeited as per local consumer laws.
 
-<br />Intellectual Property All software, graphics, and branding on this site are the property of sattanshop,vercel.app. You may not use our trademarks or copyrighted materials without express written consent.
+                  <br />Intellectual Property All software, graphics, and branding on this site are the property of sattanshop,vercel.app. You may not use our trademarks or copyrighted materials without express written consent.
 
-<br />Limitation of Liability The software is provided "as is" without warranty of any kind. We are not responsible for any damages to your computer system, loss of data, or game account restrictions that may result from the use of our software.
+                  <br />Limitation of Liability The software is provided "as is" without warranty of any kind. We are not responsible for any damages to your computer system, loss of data, or game account restrictions that may result from the use of our software.
 
-<br />Contact Information For any support or legal inquiries, please contact us at: danielblasko7@gmail.com.
-          </span></SpotlightCard>
-        </div>
-        </>
+                  <br />Contact Information For any support or legal inquiries, please contact us at: danielblasko7@gmail.com.
+                </span></SpotlightCard>
+            </div>
+          </>
         ) : currentPath === '/clients' ? (
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
@@ -391,7 +391,7 @@ Providing technical support.
               <div className='flex'><p>Service status:</p> <DbCheck /></div>
               <div className='flex space-x-8'><p>Name: </p> <p className='font-bold'> {isLoggedIn ? userName : "Guest"}</p></div>
               <div className='flex space-x-8'><p>License:</p><LicenseBadge loggedIn={isLoggedIn} /></div>
-              <div className='flex mt-[-2px] gap-x-8'><p className=''>Expiry date:</p><GetExpire/></div>
+              <div className='flex mt-[-2px] gap-x-8'><p className=''>Expiry date:</p><GetExpire /></div>
               <p>Change password</p>
               <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 m-2 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-2 mr-[20vw] font-semibold ml-[20vw]">
                 Back to Home
@@ -404,7 +404,7 @@ Providing technical support.
           <>
             <div className="text-purple-600 md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
-              <span onClick={() => {navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert()}} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
+              <span onClick={() => { navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert() }} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
               <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
             </div>
@@ -423,17 +423,22 @@ Providing technical support.
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>         
+                <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
+                {isLoggedIn === true ? (
+                  <div></div>
+                ) : (
+                <div className='grid'>
                 <button onClick={handleSellAppBuy} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
-                <img className='absolute place-self-end md:h-[45%] h-[60%]' src="zlava.png" alt="" />
-
+                <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="" />
+                </div>
+                )}
               </SpotlightCard>
             </div>
 
             <div className="p-[2vw]">
               <SpotlightCard className="no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
                 <div className='h-full'><GetImage /></div>
-                
+
               </SpotlightCard>
             </div>
           </>
@@ -450,10 +455,10 @@ Providing technical support.
             : <Register onClose={closeModals} />
         )}
 
-        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p> 
-        <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-90 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
-                  Back to Home
-                </button></SpotlightCard></footer>
+        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
+          <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-90 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+            Back to Home
+          </button></SpotlightCard></footer>
       </div>
     </>
   )
@@ -464,30 +469,30 @@ function GetExpire() {
   const [expire, setExpire] = useState<null | LicenseData>(null);
   useEffect(() => {
     async function getInfo() {
-  try {
-    // 1. Get the key from the pocket (localStorage)
-    const token = localStorage.getItem('token');
-    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+      try {
+        // 1. Get the key from the pocket (localStorage)
+        const token = localStorage.getItem('token');
+        const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
 
-    // 2. Send the request WITH the Authorization header
-    const response = await fetch(`${baseUrl}/api/get-expire`, {
-      method: 'GET',
-      headers: { 
-        'Authorization': `Bearer ${token}` // Showing the ID card to the bouncer
+        // 2. Send the request WITH the Authorization header
+        const response = await fetch(`${baseUrl}/api/get-expire`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}` // Showing the ID card to the bouncer
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Server said: " + response.status);
+        }
+
+        const data = await response.json();
+        setExpire(data);
+      } catch (error) {
+        console.log("THE FUMBLE ERROR:", error);
+        setExpire({ status: "error" });
       }
-    });
-    
-    if (!response.ok) {
-        throw new Error("Server said: " + response.status);
     }
-
-    const data = await response.json();
-    setExpire(data);
-  } catch (error) {
-    console.log("THE FUMBLE ERROR:", error);
-    setExpire({status: "error"});
-  }
-}
     getInfo();
   }, []);
 
@@ -498,15 +503,15 @@ function GetExpire() {
       </div>
     )
   } else if (expire.status === "error") {
-      return (
-        <div><p>Error</p></div>
-      )
+    return (
+      <div><p>Error</p></div>
+    )
   }
   else {
     return (
       <div>{expire.status === "never" ? <p className='text-green-500'>Never</p> : <p className='text-red-500'>No expiry date</p>}</div>
     )
-  } 
+  }
 
 }
 
@@ -600,7 +605,7 @@ function Register({ onClose }: { onClose: () => void }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   // 1. Add state for the captcha token and a ref to reset it
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -618,7 +623,7 @@ function Register({ onClose }: { onClose: () => void }) {
     }
 
     const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
-    
+
     const res = await fetch(`${baseUrl}/api/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -652,10 +657,10 @@ function Register({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col gap-2">
           <h1 className="text-lg">Username</h1>
           <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          
+
           <h1 className="text-lg">Email</h1>
           <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          
+
           <h1 className="text-lg">Password</h1>
           <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
@@ -682,7 +687,7 @@ function Register({ onClose }: { onClose: () => void }) {
 function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: () => void, setAuth: (name: string) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   // 1. Captcha state and Ref
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -735,7 +740,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
         <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
         <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        
+
         {/* 5. Add the Captcha Widget */}
         <div className="flex justify-center my-2">
           <ReCAPTCHA
