@@ -27,6 +27,8 @@ interface B2File {
 function App() {
   // --- 1. NEW NAVIGATION STATE (Required for pages) ---
   const [currentPath, setCurrentPath] = useState<string | NavObject>(window.location.pathname);
+  const [license, setLicense] = useState<boolean | null>(null); // null = loading
+  const [loading, setLoading] = useState(true);
   // Helper to change URL without refreshing
   const navigate = (path: string | NavObject) => {
     // Determine what the actual URL string is
@@ -51,6 +53,8 @@ function App() {
   const [userName, setUserName] = useState("");
   const [modalType, setModalType] = useState<"login" | "register">("login");
   const [isOpen, setIsOpen] = useState(false);
+
+
 
   function loginAlert() {
     if (isLoggedIn === false) {
@@ -136,6 +140,50 @@ function App() {
       setUserName(savedUser);
     }
   }, []);
+
+  // Add { loggedIn } inside the parentheses
+  function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
+
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setLoading(false);
+      return;
+    }
+
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    const token = localStorage.getItem('token');
+
+    fetch(`${baseUrl}/api/licence`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        // data.status is now true or false from your DB
+        setLicense(Boolean(data.status));
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [loggedIn]);
+
+  // CSS Logic:
+  // If loading: gray
+  // If license is exactly true: green
+  // Otherwise (false or null): red
+  const statusColor = loading ? 'text-gray-400' : (license === true ? 'text-green-500' : 'text-red-500');
+  const statusText = loading ? 'LOADING...' : (license === true ? 'ACTIVE' : 'INACTIVE');
+
+  return (
+    <div className="flex items-center">
+      <span className={`text-xl font-bold mt-0.5 ${statusColor}`}>
+        {statusText}
+      </span>
+    </div>
+  );
+}
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -507,7 +555,7 @@ function App() {
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
 
-                {isLoggedIn === true ? (
+                {license === true ? (
                   <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1><span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span></div>
                 ) : (
                   <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
@@ -600,50 +648,7 @@ function GetExpire() {
 
 
 
-// Add { loggedIn } inside the parentheses
-function LicenseBadge({ loggedIn }: { loggedIn: boolean }) {
-  const [license, setLicense] = useState<boolean | null>(null); // null = loading
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!loggedIn) {
-      setLoading(false);
-      return;
-    }
-
-    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
-    const token = localStorage.getItem('token');
-
-    fetch(`${baseUrl}/api/licence`, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(data => {
-        // data.status is now true or false from your DB
-        setLicense(Boolean(data.status));
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [loggedIn]);
-
-  // CSS Logic:
-  // If loading: gray
-  // If license is exactly true: green
-  // Otherwise (false or null): red
-  const statusColor = loading ? 'text-gray-400' : (license === true ? 'text-green-500' : 'text-red-500');
-  const statusText = loading ? 'LOADING...' : (license === true ? 'ACTIVE' : 'INACTIVE');
-
-  return (
-    <div className="flex items-center">
-      <span className={`text-xl font-bold mt-0.5 ${statusColor}`}>
-        {statusText}
-      </span>
-    </div>
-  );
-}
 
 function DbCheck() {
   const [loading, setLoading] = useState(false);
