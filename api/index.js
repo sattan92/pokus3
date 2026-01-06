@@ -111,7 +111,7 @@ app.get('/api/get-link', authenticateToken, async (req, res) => {
 
       // Construct the authenticated URL
       const finalUrl = `${downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${fileName}?Authorization=${authToken}`;
-
+      console.log("DEBUG URL:", finalUrl);
       res.json({ url: finalUrl });
     } else {
       res.status(403).json({ error: "You must purchase a license first." });

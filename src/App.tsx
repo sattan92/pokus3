@@ -194,10 +194,10 @@ function App() {
 
               <div>
                 <div className='flex justify-center gap-[5vw]'>
-                  <button onClick={requestDownload} className="bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+                  <button onClick={requestDownload} className="trasition-transform duration-300 hover:scale-110 bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                     Download via Google drive
                   </button>
-                  <button onClick={requestDownloadBack} className="bg-gray-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+                  <button onClick={requestDownloadBack} className="trasition-transform duration-300 hover:scale-110 bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                     Download via Backblaze
                   </button>
                 </div>
