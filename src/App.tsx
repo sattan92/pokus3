@@ -19,6 +19,11 @@ interface NavObject {
   data?: any;
 }
 
+interface B2File {
+  name: string;
+  url: string;
+}
+
 function App() {
   // --- 1. NEW NAVIGATION STATE (Required for pages) ---
   const [currentPath, setCurrentPath] = useState<string | NavObject>(window.location.pathname);
@@ -90,55 +95,38 @@ function App() {
     }
   };
   
+  // --- ADD THESE NEW STATE VARIABLES ---
+  const [b2Files, setB2Files] = useState<B2File[]>([]);
+  const [areFilesLoading, setAreFilesLoading] = useState(false);
+
+  // --- REPLACE YOUR OLD requestDownloadBack WITH THIS ---
   const requestDownloadBack = async () => {
     const token = localStorage.getItem('token');
-    const container = document.getElementById('download-container'); // Ensure you have a div with this ID
+    setAreFilesLoading(true); // Start loading spinner
 
     try {
-        // Updated to the new endpoint name
-        const response = await fetch('/api/list-files', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+      const response = await fetch('/api/list-files', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (response.ok) {
-            // data.files is now an array: [{name: 'file.exe', url: '...'}, ...]
-            if (data.files.length === 0) {
-                alert("The folder is currently empty.");
-                return;
-            }
-
-            // OPTION A: If you just want to open the FIRST file automatically:
-            // window.open(data.files[0].url, '_blank');
-
-            // OPTION B: Render a list of buttons (Recommended)
-            renderFileLinks(data.files);
-            
+      if (response.ok) {
+        if (data.files && data.files.length > 0) {
+          setB2Files(data.files); // Save files to React State
         } else {
-            alert(data.error || "You need a license to download this.");
+          alert("The folder is currently empty.");
         }
+      } else {
+        alert(data.error || "You need a license to download this.");
+      }
     } catch (err) {
-        alert("An error occurred. Are you logged in?");
-        console.error(err);
+      alert("An error occurred. Are you logged in?");
+      console.error(err);
+    } finally {
+      setAreFilesLoading(false); // Stop loading spinner
     }
-};
-
-// Helper function to show the files on your page
-const renderFileLinks = (files) => {
-    const container = document.getElementById('download-container'); 
-    if (!container) return;
-
-    container.innerHTML = '<h3>Available Downloads:</h3>';
-    
-    files.forEach(file => {
-        const btn = document.createElement('button');
-        btn.innerText = `Download ${file.name}`;
-        btn.style.margin = "10px";
-        btn.onclick = () => window.open(file.url, '_blank');
-        container.appendChild(btn);
-    });
-};
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
@@ -226,10 +214,35 @@ const renderFileLinks = (files) => {
                   <button onClick={requestDownload} className="trasition-transform duration-300 hover:scale-110 bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
                     Download via Google drive
                   </button>
-                  <button onClick={requestDownloadBack} className="trasition-transform duration-300 hover:scale-110 bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
-                    Download via Backblaze
+                  
+                  {/* Updated Button with Loading State */}
+                  <button onClick={requestDownloadBack} disabled={areFilesLoading} className="trasition-transform duration-300 hover:scale-110 bg-purple-600 text-white p-3 rounded-xl hover:bg-purple-700 transition">
+                    {areFilesLoading ? "Loading..." : "Download via Backblaze"}
                   </button>
                 </div>
+
+                {/* --- NEW FILE LIST SECTION --- */}
+                {b2Files.length > 0 && (
+                  <div className="mt-8 p-4 border border-purple-500/30 rounded-xl bg-black/20">
+                    <h3 className="text-purple-400 text-xl mb-4">Available Files:</h3>
+                    <ul className="grid gap-3">
+                      {b2Files.map((file, index) => (
+                        <li key={index} className="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                          <span className="text-white">{file.name}</span>
+                          <a 
+                            href={file.url} 
+                            target="_blank" 
+                            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg text-sm transition"
+                          >
+                            Download
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* --------------------------- */}
+
                 <div className='flex justify-center'>
                   <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 m-4 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
                     Back to Home
