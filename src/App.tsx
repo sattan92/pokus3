@@ -355,10 +355,16 @@ function App() {
 
         ) : currentPath === '/ref' ? (<>
           <div>
-            <SpotlightCard className='m-[2vw]'>
-              <span className='text-purple-500'>
+            <SpotlightCard className='m-[2vw] no-blur'>
+              <span className='text-purple-600'>
+                <h1 className='text-center text-2xl font-bold'>Refund policy</h1>
                 Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
-              </span></SpotlightCard>
+              <div className='flex justify-center'>
+                <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                  Back to Home
+                </button>
+              </div></span>
+              </SpotlightCard>
           </div>
         </>) : currentPath === '/buy' ? (<>
           <div>
@@ -376,8 +382,8 @@ function App() {
           <>
             <div>
               <SpotlightCard className='m-[2vw]'>
-                <span className='text-purple-500'>
-                  <h1>Privacy Policy Last Updated: January 2026</h1>
+                <span className='text-purple-500 no-blur'>
+                  <h1 className='text-center text-2xl font-bold'>Privacy Policy Last Updated: January 2026</h1>
                   <br />
                   1. Data Collection We collect minimal data necessary to provide our service. This includes your email address (for delivery) and IP address (for fraud prevention).
                   <br />
@@ -394,15 +400,21 @@ function App() {
                   4. Cookies We may use basic cookies to remember your session or preferences. You can disable these in your browser settings.
                   <br />
                   5. Contact To request data deletion, contact us at danielblasko7@gmail.com.
-                </span></SpotlightCard>
+                </span>
+                <div className='flex justify-center'>
+                  <br />
+                <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                  Back to Home
+                </button>
+              </div></SpotlightCard>
             </div>
           </>
         ) : currentPath === '/tos' ? (
           <>
             <div>
-              <SpotlightCard className='m-[2vw]'>
-                <span className='text-purple-600'>
-                  <h1>Terms of Service Last Updated: January 2026</h1>
+              <SpotlightCard className='m-[2vw] no-blur'>
+                <span className='text-purple-600 '>
+                  <h1 className='text-center text-2xl font-bold'>Terms of Service Last Updated: January 2026</h1>
 
                   <br />Welcome to sattanshop. By accessing our website and using our software, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you are prohibited from using our services.
                   <br />Merchant of Record Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.
@@ -416,7 +428,13 @@ function App() {
                   <br />Limitation of Liability The software is provided "as is" without warranty of any kind. We are not responsible for any damages to your computer system, loss of data, or game account restrictions that may result from the use of our software.
 
                   <br />Contact Information For any support or legal inquiries, please contact us at: danielblasko7@gmail.com.
-                </span></SpotlightCard>
+                </span>
+                <div className='flex justify-center'>
+                  <br />
+                <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
+                  Back to Home
+                </button>
+              </div></SpotlightCard>
             </div>
           </>
         ) : currentPath === '/clients' ? (
@@ -632,7 +650,10 @@ function App() {
             : <Register onClose={closeModals} />
         )}
 
-        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2'> <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p><p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p><p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
+        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2 no-blur'> 
+          <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p>
+          <p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p>
+          <p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
         </SpotlightCard></footer>
       </div>
     </>
