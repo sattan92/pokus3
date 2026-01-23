@@ -185,6 +185,59 @@ function App() {
   );
 }
 
+  function CheckLic({ loggedIn }: { loggedIn: boolean }) {
+  // Assuming these are managed by a parent or defined here via useState
+  const [license, setLicense] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setLoading(false);
+      return;
+    }
+
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    const token = localStorage.getItem('token');
+
+    fetch(`${baseUrl}/api/licence`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        // Ensure you're accessing the right property from your API response
+        setLicense(Boolean(data.status)); 
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [loggedIn]);
+
+  if (loading) return <div>Loading...</div>;
+
+  // REMOVED the extra { } around the ternary
+  return license === true ? (
+    <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> 
+      <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
+      <span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span>
+    </div>
+  ) : (
+    <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
+      <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
+      <p className=''>
+        Enjoy our LAUNCH sale, now for only 
+        <span className='lg:text-[35px] md:text-[25px] text-2xl font-bold'> 6.99&nbsp;</span>
+        <span className='lg:text-[30px] md:text-[22px] text-xl font-bold line-through'>14.99$</span> 
+        for a lifetime license.* </p>
+      <button onClick={() => navigate('/buy')} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>
+        BUY NOW
+      </button>
+      <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="discount" />
+    </div>
+  );
+}
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
@@ -555,16 +608,7 @@ function App() {
               </SpotlightCard>
               <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
 
-                {license === true ? (
-                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1><span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span></div>
-                ) : (
-                  <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
-                    <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
-                    <p className=''>Enjoy our LAUNCH sale, now for only <span className='lg:text-[35px] md:text-[25px] text-2xl text-bold'> 6.99&nbsp;</span><span className='lg:text-[30px] md:text-[22px] text-xl text-bold line-through'>14.99$</span> for a lifetime license.* </p>
-                    <button onClick={() => navigate('/buy')} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>BUY NOW</button>
-                    <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="" />
-                  </div>
-                )}
+                <CheckLic loggedIn={isLoggedIn}></CheckLic>
               </SpotlightCard>
             </div>
 
