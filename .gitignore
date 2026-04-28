@@ -44,3 +44,4 @@ obj/
 
 .vercel
 .env*.local
+template/
