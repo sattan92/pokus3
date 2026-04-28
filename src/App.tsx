@@ -1,14 +1,8 @@
-import { useState, useEffect, memo, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import './index.css'
-import LiquidChrome from './components/LiquidChrome';
-import SpotlightCard from './components/SpotlightCard';
 import ImageList from "./images.json"
 import ReCAPTCHA from "react-google-recaptcha";
-
-
-const CHROME_COLOR: [number, number, number] = [0.05, 0, 0.1];
-const MemoizedLiquidChrome = memo(LiquidChrome);
 
 interface LicenseData {
   status: string;
@@ -218,22 +212,22 @@ function App() {
 
   // REMOVED the extra { } around the ternary
   return license === true ? (
-    <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'> 
+    <div className='bg-[rgb(29,25,23)] p-[4%] grid no-blur  col-span-2 md:col-span-1'> 
       <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
       <span className='text-xl md:text-2xl'>Thanks for purchasing our product! For downloading head to 'download' section above.</span>
     </div>
   ) : (
-    <div className='grid no-blur custom-spotlight-card col-span-2 md:col-span-1'>
+    <div className='bg-[rgb(29,25,23)] p-[4%] grid no-blur  col-span-2 md:col-span-1'>
       <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2 '>Price</h1>
       <p className=''>
         Enjoy our LAUNCH sale, now for only 
         <span className='lg:text-[35px] md:text-[25px] text-2xl font-bold'> 6.99&nbsp;</span>
         <span className='lg:text-[30px] md:text-[22px] text-xl font-bold line-through'>14.99$</span> 
         for a lifetime license.* </p>
-      <button onClick={() => navigate('/buy')} className='text-black bg-purple-600 rounded-xl mt-4 mr-[20%] p-3 text-3xl '>
+      <button onClick={() => navigate('/buy')} className='text-black bg-[rgb(126,112,112)] rounded-xl mt-[4%] mr-[20%] p-3 text-3xl '>
         BUY NOW
       </button>
-      <img className='absolute place-self-end md:h-[40%] h-[50%]' src="zlava.png" alt="discount" />
+      <img className='absolute place-self-end md:h-[13%] h-[13%] mb-[-3%]' src="zlava.png" alt="discount" />
     </div>
   );
 }
@@ -262,28 +256,28 @@ function App() {
     <>
       <div className="all w-screen h-full">
         {/* --- HEADER --- */}
-        <div className='text-purple-600 font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
+        <div className='text-[rgb(126,112,112)] font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
           {/* RIGHT: Clock */}
-          <div id='hodiny' className='h-full pt-[1vw] text-start content-center flex md:p-[1vw] md:px-[3vw] p-3 order-3 justify-self-end h-full bg-black/40 drop-blur-[6px] border border-white/20 shadow-xl rounded-xl w-minback'>
+          <div id='hodiny' className='h-full pt-[1vw] text-start content-center flex md:p-[1vw] md:px-[3vw] p-3 order-3 justify-self-end h-full bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl w-minback'>
             <Clock />
           </div>
 
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[1vw] pt-[0.vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[1vw] pt-[0.vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="transition  hover:text-purple-300 duration-300 md:p-[1vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleOpenLogin} className="transition  hover:text-purple-300 duration-300 md:p-[1vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
                 Login
               </h2>
             )}
           </div>
 
           {/* MIDDLE: Welcome Message + Nav Links (Optional) */}
-          <div className="h-full md:p-[0.5vw] md:px-[5vw] p-2 order-2  justify-self-center flex items-center bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl">
+          <div className="h-full md:p-[0.5vw] md:px-[5vw] p-2 order-2  justify-self-center flex items-center bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl">
             <div className='md:flex md:gap-4'>
               <h2 className='content-center '>
                 Welcome:</h2>
@@ -292,12 +286,7 @@ function App() {
           </div>
 
           {/* BACKGROUND */}
-          <div className='fixed -z-10 inset-0 transform-gpufixed top-0 left-0 w-full h-full -z-10 transform-gpu' style={{ width: '100vw', height: '100vh', position: 'fixed' }}>
-            <MemoizedLiquidChrome
-              baseColor={CHROME_COLOR}
-              speed={0.2}
-              amplitude={0.3}
-              interactive={false} />
+          <div className='bg-stone-900 fixed -z-10 inset-0 transform-gpufixed top-0 left-0 w-full h-full -z-10 transform-gpu' style={{ width: '100vw', height: '100vh', position: 'fixed' }}>
           </div>
         </div>
 
@@ -307,7 +296,7 @@ function App() {
         {currentPath === '/download' ? (
           // === DOWNLOAD PAGE ===
           <div className="p-[5vw]">
-            <SpotlightCard className="p-8 text-center no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <div className="p-8 text-center no-blur">
               <h1 className="text-4xl font-bold text-purple-600 mb-3">Download Clients</h1>
 
               <div>
@@ -350,12 +339,12 @@ function App() {
                   </button>
                 </div>
               </div>
-            </SpotlightCard>
+            </div>
           </div>
 
         ) : currentPath === '/ref' ? (<>
           <div>
-            <SpotlightCard className='m-[2vw] no-blur'>
+            <div className='m-[2vw] no-blur'>
               <span className='text-purple-600'>
                 <h1 className='text-center text-2xl font-bold'>Refund policy</h1>
                 Due to the nature of digital software, we generally do not offer refunds once the file has been accessed. However, if you experience technical issues, please contact us within 14 days.
@@ -364,11 +353,11 @@ function App() {
                   Back to Home
                 </button>
               </div></span>
-              </SpotlightCard>
+              </div>
           </div>
         </>) : currentPath === '/buy' ? (<>
           <div>
-            <SpotlightCard className='grid font-bold m-[2vw] text-purple-600'>
+            <div className='grid font-bold m-[2vw] text-purple-600'>
               <div className='grid text-purple-600 mt-4 p-3 md:text-3xl text-xl'>
                 <h1 className=' text-2xl lg:text-[45px] md:text-[35px]'>Payment options</h1>
                 <span className=''>1. Buy via crypto: &nbsp;&nbsp;&nbsp;&nbsp;<button className='text-black bg-purple-600 rounded-xl mt-4 p-3 md:text-3xl text-xl' onClick={handleSellAppBuy}>Click here</button></span>
@@ -376,12 +365,12 @@ function App() {
                   <span>2. Pay with direct bank transfer. Time to process (0-2days)  (ADD <span className='font-black italic'>!SITE USERNAME!</span> INTO NOTE AND SET THE AMOUNT TO 6.99eur = 8.17usd)</span>
                   <span>&nbsp;&nbsp;IBAN: SK1411000000002971012476</span>
                   <span>&nbsp;&nbsp;Beneficiary name: Daniel Blasko</span></div>
-              </div>  </SpotlightCard>
+              </div>  </div>
           </div>
         </>) : currentPath === '/pp' ? (
           <>
             <div>
-              <SpotlightCard className='m-[2vw]'>
+              <div className='m-[2vw]'>
                 <span className='text-purple-500 no-blur'>
                   <h1 className='text-center text-2xl font-bold'>Privacy Policy Last Updated: January 2026</h1>
                   <br />
@@ -406,13 +395,13 @@ function App() {
                 <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
                   Back to Home
                 </button>
-              </div></SpotlightCard>
+              </div></div>
             </div>
           </>
         ) : currentPath === '/tos' ? (
           <>
             <div>
-              <SpotlightCard className='m-[2vw] no-blur'>
+              <div className='m-[2vw] no-blur'>
                 <span className='text-purple-600 '>
                   <h1 className='text-center text-2xl font-bold'>Terms of Service Last Updated: January 2026</h1>
 
@@ -434,13 +423,13 @@ function App() {
                 <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-4 px-[20vw]">
                   Back to Home
                 </button>
-              </div></SpotlightCard>
+              </div></div>
             </div>
           </>
         ) : currentPath === '/clients' ? (
           // === ABOUT PAGE ===
           <div className="p-[2vw]">
-            <SpotlightCard className="p-8 text-4xl font-bold text-purple-600 no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <div className="p-8 text-4xl font-bold text-purple-600 no-blur">
               <h1 className="mb-3 text-center mt-3">Included Clients</h1>
               <ol className='p-[7vw] list-decimal text-base md:text-2xl grid-cols-2 grid md:grid-cols-3 gap-y-[1vw] gap-x-[7vw]'>
                 {/*<li><a href="#[insert_name]">[name]</a></li>  PRIKLAD*/}
@@ -583,13 +572,13 @@ function App() {
               </div>
 
 
-            </SpotlightCard>
+            </div>
           </div>
 
         ) : currentPath === '/dashboard' ? (
           // === DAHBOARD ===
           <div className="p-[5vw]">
-            <SpotlightCard className="grid gird-rows-7 p-8 no-blur text-purple-600 text-xl" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <div className="grid gird-rows-7 p-8 no-blur text-purple-600 text-xl">
               <h1 className="text-4xl font-bold mb-3">Dashboard</h1>
               <div className='flex'><p>Service status:</p> <DbCheck /></div>
               <div className='flex space-x-8'><p>Name: </p> <p className='font-bold'> {isLoggedIn ? userName : "Guest"}</p></div>
@@ -599,42 +588,42 @@ function App() {
               <button onClick={() => navigate('/')} className="trasition-transform duration-300 hover:scale-110 m-2 text-black bg-purple-600 cursor-pointer text-lg md:text-xl rounded-xl p-2 mr-[20vw] font-semibold ml-[20vw]">
                 Back to Home
               </button>
-            </SpotlightCard>
+            </div>
           </div>
 
         ) : (
           // === DEFAULT HOME PAGE ===
           <>
-            <div className="text-purple-600 md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-black/40 backdrop-blur-[6px] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
+            <div className="text-[rgb(126,112,112)] md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
               <span onClick={() => { navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert() }} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
               <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
               <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
             </div>
 
-            <div className="text-purple-600 font-bold md:gap-[vw] md:mt-[0.3vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw] custom-spotlight-card grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
-              <SpotlightCard className="grid no-blur" spotlightColor="rgba(108, 67, 255, 0.59)">
+            <div className=" text-[rgb(126,112,112)] font-bold md:gap-[vw] md:mt-[0.3vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw]  grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
+              <div className="bg-[rgb(29,25,23)] p-[4%] border border-white/20 shadow-xl rounded-xl grid" >
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
                 <p>Be on top of the leaderboard.</p>
                 <p>Enjoy clients for every type of gameplay.</p>
                 <p>Right now we have 25 fully functional paid clients.</p>
-              </SpotlightCard>
-              <SpotlightCard className="no-blur custom-spotlight-card grid " spotlightColor="rgba(108, 67, 255, 0.59)">
+              </div>
+              <div className="bg-[rgb(29,25,23)] p-[4%] no-blur  grid border border-white/20 shadow-xl rounded-xl" >
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>About us</h1>
                 <p>We offer wide variety of clients for very affordable price.</p>
                 <p>You will receive acces to our products right after purchase.</p>
-              </SpotlightCard>
-              <SpotlightCard className="grid no-blur custom-spotlight-card col-span-2 md:col-span-1" spotlightColor="rgba(108, 67, 255, 0.59)">
+              </div>
+              <div className="p-[3%] border border-white/20 shadow-xl rounded-xl grid no-blur  col-span-2 md:col-span-1 " >
 
                 <CheckLic loggedIn={isLoggedIn}></CheckLic>
-              </SpotlightCard>
+              </div>
             </div>
 
             <div className="p-[2vw]">
-              <SpotlightCard className="no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] custom-spotlight-card" spotlightColor="rgba(108, 67, 255, 0.59)">
+              <div className="bg-[rgb(29,25,23)] p-[3%] border border-white/20 shadow-xl rounded-xl no-blur md:h-[40vw] h-[50vw] text-purple-600 font-bold md:gap-[1vw] md:mt-[-2vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] ">
                 <div className='h-full'><GetImage /></div>
 
-              </SpotlightCard>
+              </div>
             </div>
           </>
         )}
@@ -650,11 +639,11 @@ function App() {
             : <Register onClose={closeModals} />
         )}
 
-        <footer className='text-purple-600 text-2xl'> <SpotlightCard className='m-[2vw] grid gap-2 no-blur'> 
+        <footer className='text-[rgb(126,112,112)] text-2xl'> <div className='m-[2vw] grid gap-2 no-blur'> 
           <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p>
           <p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p>
           <p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
-        </SpotlightCard></footer>
+        </div></footer>
       </div>
     </>
   )
@@ -801,7 +790,7 @@ function Register({ onClose }: { onClose: () => void }) {
 
   return (
     <div className='fixed place-self-center inset-0 z-50'>
-      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[400px] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 p-8 justify-center" spotlightColor="rgba(108, 67, 255, 0.59)">
+      <div className=" text-purple-600 w-[400px] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 p-8 justify-center">
         <div className='flex justify-between items-center w-full'>
           <h1 className='text-center flex-grow'>Register</h1>
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
@@ -828,8 +817,8 @@ function Register({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <input className='hover:cursor-pointer p-3 border-2 border-purple-600 rounded-lg bg-purple-200 text-purple-900 text-xl' type="button" value="Submit" onClick={handleSubmit} />
-      </SpotlightCard>
+        <input className='hover:cursor-pointer p-3 border-2 border-purple-600 rounded-lg bg-purple-200 text-[rgb(126,112,112)] text-xl' type="button" value="Submit" onClick={handleSubmit} />
+      </div>
     </div>
   );
 }
@@ -884,7 +873,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
 
   return (
     <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center'>
-      <SpotlightCard className="custom-spotlight-card text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8" spotlightColor="rgba(108, 67, 255, 0.59)">
+      <div className=" text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8">
         <div className='flex justify-between items-center w-full'>
           <h1 className='mx-auto'>Login</h1>
           <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
@@ -906,7 +895,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
 
         <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin} />
         <p className='text-base md:text-xl font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
-      </SpotlightCard>
+      </div>
     </div>
   );
 }
@@ -936,7 +925,7 @@ function GetImage() {
   return (<div className=' gap-[2vw] grid grid-cols-[1fr_8fr_1fr] auto-rows-fr h-full'>
     <img onClick={nextImage} className='transition-transform duration-300
                     hover:scale-110 cursor-pointer self-center' src="/arrow_left.png" alt="sdadsa" />
-    <img className="rounded-xl justify-self-center max-w-full max-h-full h-full" src={ImagesList[imgCount]} alt="image" />
+    <img className="opacity-50  rounded-xl justify-self-center max-w-full max-h-full h-full" src={ImagesList[imgCount]} alt="image" />
     <img onClick={prevImage} className="duration-300
                     hover:scale-110 cursor-pointer self-center" src="/arrow_right.png" alt="dsadsa" />
   </div>)
