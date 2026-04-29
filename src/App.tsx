@@ -224,10 +224,13 @@ function App() {
         <span className='lg:text-[35px] md:text-[25px] text-2xl font-bold'> 6.99&nbsp;</span>
         <span className='lg:text-[30px] md:text-[22px] text-xl font-bold line-through'>14.99$</span> 
         for a lifetime license.* </p>
-      <button onClick={() => navigate('/buy')} className='text-black bg-[rgb(126,112,112)] rounded-xl mt-[4%] mr-[20%] p-3 text-3xl '>
+      <button onClick={() => navigate('/buy')} className='cursor-pointer text-black bg-[rgb(187,186,186)] rounded-xl mt-[4%] mr-[20%] p-3 text-3xl hover:scale-105 transition'>
         BUY NOW
       </button>
-      <img className='absolute place-self-end md:h-[13%] h-[13%] mb-[-3%]' src="zlava.png" alt="discount" />
+
+
+
+      <img className='absolute place-self-end md:h-[13%] h-[13%] mb-[-3%] opacity-70' src="zlava.png" alt="discount" />
     </div>
   );
 }
@@ -249,14 +252,14 @@ function App() {
     setIsOpen(true);
   };
 
-  const closeModals = () => setIsOpen(false);
+  const closeModals = () => {setIsOpen(false); document.getElementById('bgBrown')?.classList.add('hidden');}
 
 
   return (
     <>
       <div className="all w-screen h-full">
         {/* --- HEADER --- */}
-        <div className='text-[rgb(126,112,112)] font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
+        <div className='text-[rgb(187,186,186)] font-bold h-min text-lg lg:text-[35px] md:text-[25px] p-[2vw] grid grid-cols-3 grid-rows-1 justify-center items-center'>
 
           {/* RIGHT: Clock */}
           <div id='hodiny' className='h-full pt-[1vw] text-start content-center flex md:p-[1vw] md:px-[3vw] p-3 order-3 justify-self-end h-full bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl w-minback'>
@@ -266,11 +269,11 @@ function App() {
           {/* LEFT: Login/Logout */}
           <div className="h-full order-1 justify-self-start">
             {isLoggedIn ? (
-              <h2 onClick={handleLogout} className="transition hover:text-purple-300 duration-300 md:p-[1vw] pt-[0.vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleLogout} className="transition hover:text-white duration-300 md:p-[1vw] pt-[0.vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
                 Logout
               </h2>
             ) : (
-              <h2 onClick={handleOpenLogin} className="transition  hover:text-purple-300 duration-300 md:p-[1vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
+              <h2 onClick={handleOpenLogin} className="transition  hover:text-white duration-300 md:p-[1vw] md:px-[4vw] cursor-pointer content-center h-full w-min bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-3">
                 Login
               </h2>
             )}
@@ -286,6 +289,7 @@ function App() {
           </div>
 
           {/* BACKGROUND */}
+          <div className="hidden bg-stone-900 opacity-50 fixed h-[200vh] w-[200vw] ml-[-200px] z-30 " id='bgBrown'> </div>
           <div className='bg-stone-900 fixed -z-10 inset-0 transform-gpufixed top-0 left-0 w-full h-full -z-10 transform-gpu' style={{ width: '100vw', height: '100vh', position: 'fixed' }}>
           </div>
         </div>
@@ -594,14 +598,14 @@ function App() {
         ) : (
           // === DEFAULT HOME PAGE ===
           <>
-            <div className="text-[rgb(126,112,112)] md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
+            <div className="text-[rgb(187,186,186)] md:p-5 md:mt-[0.3vw] mt-[-1vw] mr-[2vw] ml-[2vw] bg-[rgb(29,25,23)] border border-white/20 shadow-xl rounded-xl p-1.5 flex md:text-2xl text-lg gap-8 justify-around">
               {/* NAVIGATION BAR INSIDE THE LINE */}
-              <span onClick={() => { navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert() }} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-purple-300' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
-              <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Download</span>
-              <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-purple-300 transition duration-300">Clients</span>
+              <span onClick={() => { navigate(isLoggedIn ? '/dashboard' : "/"); loginAlert() }} className={`cursor-pointer font-bold transition duration-300 ${isLoggedIn ? 'text-purple-600 hover:text-white' : 'text-gray-600 hover:text-gray-300'}`}>Dashboard </span>
+              <span onClick={() => navigate('/download')} className="cursor-pointer font-bold hover:text-white transition duration-300">Download</span>
+              <span onClick={() => navigate('/clients')} className="cursor-pointer font-bold hover:text-white transition duration-300">Clients</span>
             </div>
 
-            <div className=" text-[rgb(126,112,112)] font-bold md:gap-[vw] md:mt-[0.3vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw]  grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
+            <div className=" text-[rgb(187,186,186)] font-bold md:gap-[vw] md:mt-[0.3vw] mt-[-1vw] text-xl lg:text-[25px] md:text-[18px] p-[2vw]  grid grid-cols-2 md:grid-cols-3 gap-[2vw]">
               <div className="bg-[rgb(29,25,23)] p-[4%] border border-white/20 shadow-xl rounded-xl grid" >
                 <h1 className='text-2xl lg:text-[45px] md:text-[35px] pb-2'>Features</h1>
                 <p>Be on top of the leaderboard.</p>
@@ -639,10 +643,10 @@ function App() {
             : <Register onClose={closeModals} />
         )}
 
-        <footer className='text-[rgb(126,112,112)] text-2xl'> <div className='m-[2vw] grid gap-2 no-blur'> 
-          <p>© 2026 Pokus Utility. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Terms of Service</p>
-          <p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Privacy Policy</p>
-          <p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-purple-300 transition duration-300'>Refunds</p>
+        <footer className='text-[rgb(187,186,186)] text-2xl'> <div className='m-[2vw] grid gap-2 no-blur'> 
+          <p>© 2026 Sattanshop. All rights reserved.</p> <p onClick={() => navigate('/tos')} className='h-min md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-white transition duration-300'>Terms of Service</p>
+          <p onClick={() => navigate('/pp')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-white transition duration-300'>Privacy Policy</p>
+          <p onClick={() => navigate('/ref')} className='md:w-[20vw] mt-[-10px] cursor-pointer font-bold hover:text-white transition duration-300'>Refunds</p>
         </div></footer>
       </div>
     </>
@@ -747,6 +751,8 @@ function Register({ onClose }: { onClose: () => void }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  document.getElementById('bgBrown')?.classList.remove('hidden');
+
 
   // 1. Add state for the captcha token and a ref to reset it
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -780,6 +786,7 @@ function Register({ onClose }: { onClose: () => void }) {
     if (res.ok) {
       alert("Registered successfully!");
       onClose();
+      document.getElementById('bgBrown')?.classList.add('hidden');
     } else {
       alert("Registration failed");
       // 4. Reset captcha on failure so they can try again
@@ -789,22 +796,22 @@ function Register({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className='fixed place-self-center inset-0 z-50'>
-      <div className=" text-purple-600 w-[400px] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-4 p-8 justify-center">
+    <div className='fixed place-self-center inset-0 z-50 backdrop-blur border border-white/20 shadow-xl rounded-xl'>
+      <div className="text-[rgb(187,186,186)] w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8">
         <div className='flex justify-between items-center w-full'>
-          <h1 className='text-center flex-grow'>Register</h1>
-          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
+          <h1 className='mx-auto'>Register</h1>
+          <img className='hover:scale-110 transition h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
         </div>
 
         <div className="flex flex-col gap-2">
-          <h1 className="text-lg">Username</h1>
-          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <h1 className="">Username</h1>
+          <input className='border border-white/20 shadow-xl rounded-lg text-[rgb(187,186,186)] font-normal px-2' type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
 
-          <h1 className="text-lg">Email</h1>
-          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <h1 className="">Email</h1>
+          <input className='border border-white/20 shadow-xl rounded-lg text-[rgb(187,186,186)] font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-          <h1 className="text-lg">Password</h1>
-          <input className='p-2 border-2 border-purple-400 rounded-lg text-purple-400 text-base' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <h1 className="">Password</h1>
+          <input className='border border-white/20 shadow-xl rounded-lg text-[rgb(187,186,186)] font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
 
         {/* 5. The Captcha Widget */}
@@ -817,7 +824,7 @@ function Register({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <input className='hover:cursor-pointer p-3 border-2 border-purple-600 rounded-lg bg-purple-200 text-[rgb(126,112,112)] text-xl' type="button" value="Submit" onClick={handleSubmit} />
+        <input className='hover:cursor-pointer text-black rounded-lg bg-[rgb(187,186,186)] py-2' type="button" value="Submit" onClick={handleSubmit} />
       </div>
     </div>
   );
@@ -829,6 +836,7 @@ function Register({ onClose }: { onClose: () => void }) {
 function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: () => void, setAuth: (name: string) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  document.getElementById('bgBrown')?.classList.remove('hidden');
 
   // 1. Captcha state and Ref
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -862,6 +870,7 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
       localStorage.setItem('username', data.username);
       setAuth(data.username);
       alert("Logged in!");
+      document.getElementById('bgBrown')?.classList.add('hidden');
       onClose();
     } else {
       alert(data.error || "Login failed");
@@ -872,16 +881,16 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
   }
 
   return (
-    <div className='fixed place-self-center inset-0 z-50 flex items-center justify-center'>
-      <div className=" text-purple-600 w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8">
+    <div className='border border-white/20 shadow-xl rounded-xl fixed place-self-center inset-0 z-50 flex items-center justify-center backdrop-blur'>
+      <div className="text-[rgb(187,186,186)] w-[90vw] md:w-[40vw] font-bold text-2xl lg:text-[35px] md:text-[25px] flex flex-col gap-3 justify-center p-8">
         <div className='flex justify-between items-center w-full'>
           <h1 className='mx-auto'>Login</h1>
-          <img className='h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
+          <img className='hover:scale-110 transition h-8 w-8 cursor-pointer' src="x.png" alt="close" onClick={onClose} />
         </div>
         <h1>Email</h1>
-        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input className='border border-white/20 shadow-xl rounded-lg text-[rgb(187,186,186)] font-normal px-2' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <h1>Password</h1>
-        <input className='border-1 md:border-2 border-purple-400 rounded-lg text-purple-400 font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input className='border border-white/20 shadow-xl rounded-lg text-[rgb(187,186,186)] font-normal px-2' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
         {/* 5. Add the Captcha Widget */}
         <div className="flex justify-center my-2">
@@ -893,12 +902,14 @@ function Login({ onClose, onSwitch, setAuth }: { onClose: () => void, onSwitch: 
           />
         </div>
 
-        <input className='hover:cursor-pointer border-1 md:border-2 border-purple-600 rounded-lg bg-purple-200 py-2' type="button" value="Submit" onClick={handleLogin} />
+        <input className='hover:cursor-pointer text-black rounded-lg bg-[rgb(187,186,186)] py-2' type="button" value="Submit" onClick={handleLogin} />
         <p className='text-base md:text-xl font-normal text-center'>No account? <span className='underline cursor-pointer' onClick={onSwitch}>Register</span></p>
       </div>
     </div>
   );
 }
+
+
 function GetImage() {
   const ImagesList = ImageList.images;
   const [imgCount, setImgCount] = useState(0);
