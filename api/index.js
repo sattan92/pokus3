@@ -3,7 +3,11 @@ import pkg from "pg";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import 'dotenv/config';
+import dotenv from "dotenv";
+// Load .env.local first (Vercel CLI convention), then .env. dotenv does not
+// override already-set variables, so .env.local wins — matching Vite's order.
+dotenv.config({ path: ".env.local" });
+dotenv.config();
 const { Pool } = pkg;
 import B2 from 'backblaze-b2';
 
@@ -12,9 +16,32 @@ const app = express();
 // 1. MUST BE BEFORE express.json() to handle raw bodies if needed later, 
 // but for Sell.app JSON is fine. 
 app.use(express.json());
-app.use(cors());
 
-const JWT_SECRET = process.env.JWT_SECRET || "change_this_to_something_secure";
+// CORS: only allow the known frontend origin(s). Server-to-server requests
+// (e.g. the Sell.app webhook) have no Origin header and are always allowed.
+const ALLOWED_ORIGINS =
+  process.env.NODE_ENV === "production"
+    ? ["https://sattanshop.tech", "https://www.sattanshop.tech"]
+    : ["http://localhost:5173", "http://127.0.0.1:5173"];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  // Fail loudly instead of silently using a weak, hardcoded secret.
+  throw new Error("JWT_SECRET environment variable is not set");
+}
 const isProduction = process.env.NODE_ENV === "production";
 
 const db = new Pool({
