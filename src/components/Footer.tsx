@@ -19,7 +19,7 @@ export function Footer({ navigate }: FooterProps) {
           <p className="mt-1 text-sm text-faint">© 2026 Sattanshop. All rights reserved.</p>
         </div>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           {LINKS.map((link) => (
             <button
               key={link.path}
@@ -29,6 +29,14 @@ export function Footer({ navigate }: FooterProps) {
               {link.label}
             </button>
           ))}
+
+          <a
+            href="mailto:danko1.blasko@gmail.com"
+            className="flex items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 font-display text-sm text-mute transition hover:border-accent/40 hover:text-accent-hi"
+          >
+            <span className="font-mono text-[10px] uppercase tracking-widest text-faint">Support</span>
+            <span className="font-medium text-ink">danko1.blasko@gmail.com</span>
+          </a>
         </div>
       </div>
     </footer>
