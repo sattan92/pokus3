@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import dotenv from "dotenv";
+import { createHmac, timingSafeEqual } from "crypto";
 // Load .env.local first (Vercel CLI convention), then .env. dotenv does not
 // override already-set variables, so .env.local wins — matching Vite's order.
 dotenv.config({ path: ".env.local" });
@@ -14,8 +15,10 @@ import B2 from 'backblaze-b2';
 const app = express();
 
 // 1. MUST BE BEFORE express.json() to handle raw bodies if needed later, 
-// but for Sell.app JSON is fine. 
-app.use(express.json());
+// but for Sell.app JSON is fine.
+// The `verify` hook captures the exact raw body bytes so the Sell.app webhook
+// signature can be validated over the original (unparsed) payload.
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 
 // CORS: only allow the known frontend origin(s). Server-to-server requests
 // (e.g. the Sell.app webhook) have no Origin header and are always allowed.
@@ -181,9 +184,64 @@ app.get('/api/get-download-link', authenticateToken, async (req, res) => {
 });
 
 // --- 2. SELL.APP WEBHOOK ---
-// ... existing imports like const pool = require('./db') or similar ...
+
+// Constant-time string comparison to avoid leaking timing information.
+function safeEqual(a, b) {
+  const aBuf = Buffer.from(String(a));
+  const bBuf = Buffer.from(String(b));
+  if (aBuf.length !== bBuf.length) return false;
+  return timingSafeEqual(aBuf, bBuf);
+}
+
+// Verifies a Sell.app webhook request. Supports both the legacy `Signature`
+// header (hex HMAC-SHA256 of the raw body) and the newer Standard Webhooks
+// format (`webhook-id` / `webhook-timestamp` / `webhook-signature`).
+function verifyWebhookSignature(req) {
+  const secret = process.env.SELLAPP_WEBHOOK_SECRET;
+  if (!secret) {
+    console.error("❌ SELLAPP_WEBHOOK_SECRET is not set. Webhook rejected.");
+    return false;
+  }
+
+  const rawBody = req.rawBody ? req.rawBody.toString("utf8") : "";
+
+  // Standard Webhooks (newer): signing input is `${id}.${timestamp}.${rawBody}`.
+  const whId = req.headers["webhook-id"];
+  const whTimestamp = req.headers["webhook-timestamp"];
+  const whSignature = req.headers["webhook-signature"];
+  if (whId && whTimestamp && whSignature) {
+    const [version, provided] = String(whSignature).split(",");
+    if (version !== "v1") return false;
+
+    // Reject replays older than the window (seconds).
+    const timestamp = Number(whTimestamp);
+    const now = Math.floor(Date.now() / 1000);
+    if (!Number.isFinite(timestamp) || Math.abs(now - timestamp) > 300) {
+      return false;
+    }
+
+    const expected = createHmac("sha256", secret)
+      .update(`${whId}.${whTimestamp}.${rawBody}`)
+      .digest("base64");
+    return safeEqual(provided, expected);
+  }
+
+  // Legacy: `Signature` header (hex HMAC-SHA256 over the raw body bytes).
+  const signature = req.headers["signature"] ?? req.headers["Signature"] ?? "";
+  if (signature) {
+    const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
+    return safeEqual(signature, expected);
+  }
+
+  return false;
+}
 
 app.post('/api/webhooks/sellapp', async (req, res) => {
+  // Fail closed: only process requests that carry a valid Sell.app signature.
+  if (!verifyWebhookSignature(req)) {
+    return res.status(401).send("Invalid signature");
+  }
+
   const data = req.body;
   let submittedUsername = "";
 

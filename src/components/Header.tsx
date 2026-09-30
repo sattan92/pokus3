@@ -1,4 +1,5 @@
 import { Clock } from "@/components/Clock"
+import { Logo } from "@/components/Logo"
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 
@@ -41,10 +42,13 @@ export function Header({
         {/* Logo */}
         <button
           onClick={() => navigate("/")}
-          className="font-display text-lg font-bold tracking-wide text-ink transition hover:text-white"
+          className="flex items-center gap-2.5 font-display text-lg font-bold tracking-wide text-ink transition hover:text-white"
         >
-          SATTAN<span className="text-accent-hi">SHOP</span>
-          <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-faint">.tech</span>
+          <Logo size={28} />
+          <span>
+            SATTAN<span className="text-accent-hi">SHOP</span>
+            <span className="ml-1.5 font-mono text-[10px] uppercase tracking-widest text-faint">.tech</span>
+          </span>
         </button>
 
         {/* Nav */}

@@ -12,6 +12,7 @@ import { ClientsPage } from "@/pages/ClientsPage"
 import { DashboardPage } from "@/pages/DashboardPage"
 import { BuyPage } from "@/pages/BuyPage"
 import { PolicyPage } from "@/pages/PolicyPage"
+import { NotFoundPage } from "@/pages/NotFoundPage"
 
 interface B2File {
   name: string
@@ -233,6 +234,9 @@ function App() {
           </PolicyPage>
         )
       default:
+        if (currentPath !== "/") {
+          return <NotFoundPage navigate={navigate} />
+        }
         return <HomePage navigate={navigate} isLoggedIn={isLoggedIn} />
     }
   }
